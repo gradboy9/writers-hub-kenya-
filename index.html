@@ -1,0 +1,1514 @@
+<div class="chat-input-group">
+                    <input type="text" id="supportMessageInput" placeholder="Type your message..." onkeypress="if(event.key==='Enter') sendSupportMessage()">
+                    <button class="btn btn-primary" onclick="sendSupportMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROFILE PAGE -->
+    <div id="profile" class="page">
+        <div class="profile-container">
+            <h1 style="color: #2E7D32; margin-bottom: 2rem;">My Profile</h1>
+            
+            <div class="profile-card">
+                <h2 id="profileName">John Doe</h2>
+                <p><strong>Email:</strong> <span id="profileEmail">john@example.com</span></p>
+                <p><strong>Member Since:</strong> <span id="profileDate">October 2025</span></p>
+                
+                <div id="walletSection">
+                    <div class="wallet-badge" id="walletDisplay">
+                        🔒 Wallet: KSH <span id="walletBalance">0</span> (Locked - Pay Activation Fee)
+                    </div>
+                    <div id="walletWarning" class="alert-box alert-warning">
+                        <strong>⚠️ Wallet Locked!</strong><br>
+                        You must pay the activation fee of KSH 500 to unlock your wallet and withdraw earnings.
+                    </div>
+                </div>
+
+                <!-- Withdrawal Section -->
+                <div class="withdraw-section" id="withdrawSection" style="display: none;">
+                    <h3 style="color: #2E7D32; margin-bottom: 1rem;">💰 Withdraw Funds</h3>
+                    <div class="alert-box alert-info">
+                        <strong>ℹ️ Minimum Withdrawal:</strong> KSH 2,000<br>
+                        Withdrawals are processed within 24-48 hours to your M-Pesa number.
+                    </div>
+                    
+                    <div id="withdrawContent">
+                        <div class="form-group">
+                            <label>M-Pesa Phone Number</label>
+                            <input type="tel" id="withdrawPhone" placeholder="e.g., 0712345678" pattern="[0-9]{10}">
+                        </div>
+                        <div class="form-group">
+                            <label>Amount to Withdraw (KSH)</label>
+                            <input type="number" id="withdrawAmount" placeholder="Minimum: 2000" min="2000">
+                            <small style="color: #666;">Available Balance: KSH <span id="availableBalance">0</span></small>
+                        </div>
+                        <button class="btn btn-success" onclick="requestWithdrawal()" style="width: 100%;">
+                            Request Withdrawal
+                        </button>
+                    </div>
+
+                    <div id="withdrawalHistory" style="margin-top: 2rem;">
+                        <h4 style="color: #2E7D32;">Withdrawal History</h4>
+                        <div id="withdrawalList"></div>
+                    </div>
+                </div>
+                
+                <div class="verification-status" id="verificationStatus">
+                    <span>Verification Status:</span>
+                    <span id="verificationBadge">Not Verified</span>
+                </div>
+
+                <!-- Referral Section -->
+                <div class="referral-section">
+                    <h3 style="margin-bottom: 1rem;">🎁 Earn KSH 1,000 Bonus!</h3>
+                    <p>Share our platform with 10 WhatsApp groups and earn KSH 1,000 instantly!</p>
+                    
+                    <div class="referral-progress">
+                        <div class="referral-progress-bar" id="referralProgress" style="width: 0%;">
+                            <span id="referralProgressText">0/10 Groups</span>
+                        </div>
+                    </div>
+                    
+                    <div class="alert-box alert-info" style="margin: 1rem 0;">
+                        <strong>Your Referral Link:</strong><br>
+                        <input type="text" id="userReferralLink" readonly style="width: 100%; padding: 0.5rem; margin-top: 0.5rem; border: 2px solid #0dcaf0; border-radius: 5px;" value="Loading...">
+                        <button class="copy-btn" onclick="copyReferralLink()">📋 Copy Link</button>
+                    </div>
+                    
+                    <div class="share-buttons">
+                        <button class="share-btn share-whatsapp" onclick="shareToWhatsApp()">
+                            📱 Share to WhatsApp
+                        </button>
+                        <button class="share-btn share-facebook" onclick="shareToFacebook()">
+                            👍 Share to Facebook
+                        </button>
+                        <button class="share-btn share-twitter" onclick="shareToTwitter()">
+                            🐦 Share to Twitter
+                        </button>
+                        <button class="share-btn share-telegram" onclick="shareToTelegram()">
+                            ✈️ Share to Telegram
+                        </button>
+                    </div>
+                    
+                    <button class="btn btn-success" onclick="markGroupShared()" style="width: 100%; margin-top: 1rem;">
+                        ✅ I've Shared to a Group
+                    </button>
+                </div>
+
+                <div class="plans-section">
+                    <h3 style="color: #2E7D32; margin-bottom: 1rem;">Upgrade Your Account</h3>
+                    <div class="plans-grid">
+                        <div class="plan-card" onclick="showModal('payment', 'verified')">
+                            <h3>✓ Verified Writer</h3>
+                            <p style="font-size: 2rem; margin: 1rem 0;">KSH 500</p>
+                            <p>✓ Unlock wallet for withdrawals</p>
+                            <p>✓ Green verification tick</p>
+                            <p>✓ Stand out to clients</p>
+                            <p>✓ Priority support</p>
+                        </div>
+                        <div class="plan-card vip" onclick="showModal('payment', 'vip')">
+                            <h3>★ VIP Member</h3>
+                            <p style="font-size: 2rem; margin: 1rem 0;">KSH 3,000</p>
+                            <p>✓ All Verified benefits</p>
+                            <p>✓ Blue VIP verification tick</p>
+                            <p>✓ Featured in job listings</p>
+                            <p>✓ Push your jobs to many users</p>
+                            <p>✓ Premium support</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN DASHBOARD -->
+    <div id="admin" class="page">
+        <div class="admin-container">
+            <div class="admin-header">
+                <h1 style="color: #2E7D32;">Admin Dashboard</h1>
+                <div class="admin-stats">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalUsers">0</div>
+                        <div>Total Users</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="verifiedUsers">0</div>
+                        <div>Verified Users</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="vipUsers">0</div>
+                        <div>VIP Members</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalJobs">0</div>
+                        <div>Total Jobs</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-tabs">
+                <button class="admin-tab active" onclick="showAdminTab('users')">Users</button>
+                <button class="admin-tab" onclick="showAdminTab('payments')">Payments</button>
+                <button class="admin-tab" onclick="showAdminTab('withdrawals')">Withdrawals</button>
+                <button class="admin-tab" onclick="showAdminTab('jobs')">Jobs</button>
+                <button class="admin-tab" onclick="showAdminTab('submissions')">Job Submissions</button>
+                <button class="admin-tab" onclick="showAdminTab('support')">Support Chats</button>
+                <button class="admin-tab" onclick="showAdminTab('referral')">Referral Link</button>
+            </div>
+
+            <!-- Users Tab -->
+            <div id="adminUsersTab" class="admin-tab-content" style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                <h2 style="color: #2E7D32; margin-bottom: 1rem;">User Management</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Wallet</th>
+                            <th>Referrals</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTable"></tbody>
+                </table>
+            </div>
+
+            <!-- Payments Tab -->
+            <div id="adminPaymentsTab" class="admin-tab-content hidden" style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                <h2 style="color: #2E7D32; margin-bottom: 1rem;">Payment Approvals</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Plan</th>
+                            <th>Amount</th>
+                            <th>Screenshot</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="paymentsTable"></tbody>
+                </table>
+            </div>
+
+            <!-- Withdrawals Tab -->
+            <div id="adminWithdrawalsTab" class="admin-tab-content hidden" style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                <h2 style="color: #2E7D32; margin-bottom: 1rem;">Withdrawal Requests</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Phone Number</th>
+                            <th>Amount</th>
+                            <th>Requested</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="withdrawalsTable"></tbody>
+                </table>
+            </div>
+
+            <!-- Jobs Tab -->
+            <div id="adminJobsTab" class="admin-tab-content hidden" style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                <h2 style="color: #2E7D32; margin-bottom: 1rem;">Job Management</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Job Title</th>
+                            <th>Posted By</th>
+                            <th>Budget</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="jobsTable"></tbody>
+                </table>
+            </div>
+
+            <!-- Submissions Tab -->
+            <div id="adminSubmissionsTab" class="admin-tab-content hidden" style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                <h2 style="color: #2E7D32; margin-bottom: 1rem;">Job Submissions</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Job</th>
+                            <th>Writer</th>
+                            <th>Submitted</th>
+                            <th>File</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="submissionsTable"></tbody>
+                </table>
+            </div>
+
+            <!-- Support Chats Tab -->
+            <div id="adminSupportTab" class="admin-tab-content hidden" style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                <h2 style="color: #2E7D32; margin-bottom: 1rem;">User Support Chats</h2>
+                <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 1rem; min-height: 500px;">
+                    <div style="border-right: 2px solid #ddd; padding-right: 1rem;">
+                        <h3 style="color: #2E7D32; margin-bottom: 1rem;">Users</h3>
+                        <div id="supportUsersList" style="max-height: 450px; overflow-y: auto;"></div>
+                    </div>
+                    
+                    <div>
+                        <div id="adminSupportChatHeader" style="padding: 1rem; background: #f0f0f0; border-radius: 5px; margin-bottom: 1rem;">
+                            <h3 style="color: #2E7D32;">Select a user to view chat</h3>
+                        </div>
+                        <div class="chat-container" id="adminSupportChatContainer" style="max-height: 350px; margin-bottom: 1rem;">
+                            <p style="color: #999; text-align: center;">No conversation selected</p>
+                        </div>
+                        <div class="typing-indicator" id="adminTypingIndicator">User is typing...</div>
+                        <div class="chat-input-group" id="adminSupportReplyBox" style="display: none;">
+                            <input type="text" id="adminReplyInput" placeholder="Type your reply..." onkeypress="if(event.key==='Enter') sendAdminReply()">
+                            <button class="btn btn-primary" onclick="sendAdminReply()">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Referral Link Tab -->
+            <div id="adminReferralTab" class="admin-tab-content hidden" style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                <h2 style="color: #2E7D32; margin-bottom: 1rem;">Manage Referral Link</h2>
+                
+                <div class="alert-box alert-info">
+                    <strong>ℹ️ Instructions:</strong><br>
+                    Set the referral link that users will share to earn bonuses. This link should lead to your platform's signup page or promotional page.
+                </div>
+
+                <div class="form-group">
+                    <label>Referral Link URL</label>
+                    <input type="url" id="adminReferralLinkInput" placeholder="https://kenyawritershub.com/join?ref=bonus1000" style="width: 100%; padding: 0.8rem; border: 2px solid #ddd; border-radius: 5px;">
+                </div>
+
+                <button class="btn btn-primary" onclick="updateReferralLink()">💾 Save Referral Link</button>
+
+                <div style="margin-top: 2rem;">
+                    <h3 style="color: #2E7D32; margin-bottom: 1rem;">Current Referral Link:</h3>
+                    <div class="alert-box alert-success">
+                        <strong id="currentReferralDisplay">Not set yet</strong>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <h3 style="color: #2E7D32; margin-bottom: 1rem;">Referral Statistics:</h3>
+                    <div class="admin-stats">
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalReferralEarners">0</div>
+                            <div>Users Earned Bonus</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalReferralShares">0</div>
+                            <div>Total Shares</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ALL MODALS -->
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 style="color: #2E7D32;">Login</h2>
+                <button class="close-btn" onclick="closeModal('loginModal')">&times;</button>
+            </div>
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 1rem;">Login</button>
+                <a href="#" onclick="showModal('forgotPassword')" style="color: #2E7D32; text-align: center; display: block;">Forgot Password?</a>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 style="color: #2E7D32;">Sign Up</h2>
+                <button class="close-btn" onclick="closeModal('signupModal')">&times;</button>
+            </div>
+            <form onsubmit="handleSignup(event)">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="signupName" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="signupEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="signupPassword" required minlength="6">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Sign Up</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div id="forgotPasswordModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 style="color: #2E7D32;">Forgot Password</h2>
+                <button class="close-btn" onclick="closeModal('forgotPasswordModal')">&times;</button>
+            </div>
+            <form onsubmit="handleForgotPassword(event)">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="forgotEmail" required>
+                </div>
+                <div class="alert-box alert-info">
+                    <strong>ℹ️ Password Reset Process:</strong><br>
+                    Enter your email address. Admin will send you a reset link to your email within 24 hours.
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Request Reset</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Post Job Modal -->
+    <div id="postJobModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 style="color: #2E7D32;">Post a Job</h2>
+                <button class="close-btn" onclick="closeModal('postJobModal')">&times;</button>
+            </div>
+            <form onsubmit="handlePostJob(event)">
+                <div class="form-group">
+                    <label>Job Title</label>
+                    <input type="text" id="jobTitle" required>
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="jobCategory" required>
+                        <option>Article Writing</option>
+                        <option>Blog Posts</option>
+                        <option>Product Descriptions</option>
+                        <option>Academic Writing</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Budget (KSH)</label>
+                    <input type="number" id="jobBudget" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea rows="5" id="jobDescription" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Attach Files (Optional)</label>
+                    <input type="file" id="jobFiles" multiple accept=".pdf,.doc,.docx,.txt">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Post Job</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Job Details Modal -->
+    <div id="jobDetailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 style="color: #2E7D32;" id="jobDetailsTitle">Job Details</h2>
+                <button class="close-btn" onclick="closeModal('jobDetailsModal')">&times;</button>
+            </div>
+            <div id="jobDetailsContent"></div>
+        </div>
+    </div>
+
+    <!-- Work on Job Modal -->
+    <div id="workOnJobModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 style="color: #2E7D32;">Work on Job</h2>
+                <button class="close-btn" onclick="closeModal('workOnJobModal')">&times;</button>
+            </div>
+            <div id="workJobContent">
+                <h3 id="workJobTitle" style="color: #2E7D32; margin-bottom: 1rem;"></h3>
+                <p id="workJobDescription" style="margin-bottom: 1rem;"></p>
+                
+                <div class="form-group">
+                    <label>Upload Your Work</label>
+                    <input type="file" id="workSubmissionFile" accept=".pdf,.doc,.docx,.txt" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Additional Notes (Optional)</label>
+                    <textarea id="workNotes" rows="3" placeholder="Any additional information..."></textarea>
+                </div>
+
+                <h4 style="color: #2E7D32; margin-top: 2rem; margin-bottom: 1rem;">Job Chat</h4>
+                <div class="chat-container" id="jobChatContainer">
+                    <p style="color: #999; text-align: center;">No messages yet. Start the conversation!</p>
+                </div>
+                <div class="typing-indicator" id="jobTypingIndicator">Admin is typing...</div>
+                <div class="chat-input-group">
+                    <input type="text" id="chatMessageInput" placeholder="Type your message..." onkeypress="if(event.key==='Enter') sendChatMessage()">
+                    <button class="btn btn-primary" onclick="sendChatMessage()">Send</button>
+                </div>
+
+                <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;" onclick="submitWork()">Submit Work</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 style="color: #2E7D32;">Payment - Pochi La Biashara</h2>
+                <button class="close-btn" onclick="closeModal('paymentModal')">&times;</button>
+            </div>
+            <form onsubmit="handlePayment(event)">
+                <div class="form-group">
+                    <label>Plan Selected</label>
+                    <input type="text" id="selectedPlan" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Amount (KSH)</label>
+                    <input type="number" id="paymentAmount" readonly>
+                </div>
+                
+                <div style="background: #fff3cd; padding: 1rem; border-radius: 5px; margin-bottom: 1rem; border-left: 4px solid #ff9800;">
+                    <p style="margin: 0; font-size: 0.9rem;"><strong>📱 Payment Instructions:</strong></p>
+                    <ol style="margin: 0.5rem 0; padding-left: 1.5rem; font-size: 0.9rem;">
+                        <li>Open M-Pesa on your phone</li>
+                        <li>Select "Lipa na M-Pesa" → "Pochi La Biashara"</li>
+                        <li>Enter Store Number: <strong>0114706482</strong></li>
+                        <li>Enter Amount: <strong>KSH <span id="paymentAmountDisplay"></span></strong></li>
+                        <li>Enter your M-Pesa PIN</li>
+                        <li>Take a screenshot of the confirmation message</li>
+                        <li>Upload the screenshot below</li>
+                        <li>Wait for admin approval (5-6 hours)</li>
+                    </ol>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload M-Pesa Screenshot</label>
+                    <input type="file" id="paymentScreenshot" accept="image/*" required>
+                    <small style="color: #666;">Please upload a clear screenshot of your M-Pesa payment confirmation</small>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Payment for Approval</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Payment Pending Modal -->
+    <div id="paymentPendingModal" class="modal">
+        <div class="modal-content" style="text-align: center;">
+            <h2 style="color: #2E7D32; margin-bottom: 1rem;">Payment Submitted</h2>
+            <div style="font-size: 4rem; margin: 2rem 0;">⏳</div>
+            <h3 style="color: #ff9800; margin-bottom: 1rem;">Pending Admin Approval</h3>
+            <p style="font-size: 1.1rem; margin-bottom: 1rem;">Your payment has been submitted successfully!</p>
+            <p style="color: #666;">Admin will review your payment within 5-6 hours and update your verification status.</p>
+            <p style="color: #666; margin-top: 1rem;">You will be notified once approved.</p>
+            <button class="btn btn-primary" onclick="closeModal('paymentPendingModal')" style="margin-top: 2rem;">OK</button>
+        </div>
+    </div>
+
+    <!-- View Screenshot Modal -->
+    <div id="viewScreenshotModal" class="modal">
+        <div class="modal-content" style="text-align: center;">
+            <div class="modal-header">
+                <h2 style="color: #2E7D32;">Payment Screenshot</h2>
+                <button class="close-btn" onclick="closeModal('viewScreenshotModal')">&times;</button>
+            </div>
+            <img id="screenshotPreview" style="max-width: 100%; border-radius: 10px;">
+        </div>
+    </div>
+
+    <script>
+        // COMPLETE JAVASCRIPT CODE
+        const STORAGE_KEYS = {
+            USERS: 'kwh_users',
+            CURRENT_USER: 'kwh_current_user',
+            JOBS: 'kwh_jobs',
+            PAYMENTS: 'kwh_payments',
+            SUBMISSIONS: 'kwh_submissions',
+            JOB_CHATS: 'kwh_job_chats',
+            SUPPORT_CHATS: 'kwh_support_chats',
+            REFERRAL_LINK: 'kwh_referral_link',
+            WITHDRAWALS: 'kwh_withdrawals'
+        };
+
+        const MINIMUM_WITHDRAWAL = 2000;
+
+        function loadData(key, defaultValue) {
+            const data = localStorage.getItem(key);
+            return data ? JSON.parse(data) : defaultValue;
+        }
+
+        function saveData(key, value) {
+            localStorage.setItem(key, JSON.stringify(value));
+        }
+
+        let users = loadData(STORAGE_KEYS.USERS, [
+            { id: 1, name: 'John Doe', email: 'john@example.com', password: 'pass123', verified: true, vip: false, isAdmin: false, wallet: 0, referralShares: 0, referralEarned: false, joinedAt: new Date().toISOString() },
+            { id: 2, name: 'Admin User', email: 'admin@kenyawritershub.com', password: 'admin123', verified: true, vip: true, isAdmin: true, wallet: 0, referralShares: 0, referralEarned: false, joinedAt: new Date().toISOString() }
+        ]);
+        
+        let currentUser = loadData(STORAGE_KEYS.CURRENT_USER, null);
+        let userIdCounter = users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1;
+        let jobIdCounter = 4;
+        let paymentIdCounter = 1;
+        let submissionIdCounter = 1;
+        let withdrawalIdCounter = 1;
+        
+        let jobs = loadData(STORAGE_KEYS.JOBS, [
+            { id: 1, title: 'Article Writing - Technology', category: 'Article Writing', budget: 1500, posted: '2 hours ago', description: 'Need 5 articles about latest tech trends, 800 words each. Must have good research skills and understanding of tech industry.', postedBy: 1<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kenya Writers Hub - Freelancing Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kadwa:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Kadwa', serif;
+            background-color: #F5F5DC;
+            color: #333;
+        }
+
+        nav {
+            background-color: #2E7D32;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #FFD700;
+        }
+
+        .btn {
+            padding: 0.6rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Kadwa', serif;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .btn-primary:hover, .btn-primary:active {
+            background-color: #45a049;
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-danger {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .btn-success {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .btn-warning {
+            background-color: #ff9800;
+            color: white;
+        }
+
+        .hamburger {
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            margin: 3px 0;
+        }
+
+        .menu-dropdown {
+            display: none;
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            padding: 1rem;
+            min-width: 200px;
+            z-index: 1000;
+        }
+
+        .menu-dropdown.active {
+            display: block;
+        }
+
+        .menu-dropdown a {
+            display: block;
+            color: #2E7D32;
+            text-decoration: none;
+            padding: 0.5rem;
+            border-radius: 3px;
+            transition: 0.3s;
+        }
+
+        .menu-dropdown a:hover {
+            background-color: #f0f0f0;
+        }
+
+        .hero {
+            background: url('https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1600') center/cover;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            padding: 2rem;
+            position: relative;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+        }
+
+        .wallet-badge {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #333;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 1rem 0;
+        }
+
+        .wallet-locked {
+            background: linear-gradient(135deg, #999, #666);
+            color: white;
+        }
+
+        .withdraw-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .referral-section {
+            background: linear-gradient(135deg, #9C27B0, #673AB7);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .referral-progress {
+            background: rgba(255,255,255,0.2);
+            height: 30px;
+            border-radius: 15px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .referral-progress-bar {
+            background: #4CAF50;
+            height: 100%;
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .share-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .share-btn {
+            padding: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-weight: bold;
+            border: none;
+        }
+
+        .share-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .share-whatsapp { background: #25D366; color: white; }
+        .share-facebook { background: #1877F2; color: white; }
+        .share-twitter { background: #1DA1F2; color: white; }
+        .share-telegram { background: #0088cc; color: white; }
+
+        .how-it-works {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .how-it-works h2 {
+            text-align: center;
+            color: #2E7D32;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .step-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .step-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .step-number {
+            background-color: #4CAF50;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0 auto 1rem;
+        }
+
+        .jobs-container {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .search-bar {
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 0.8rem;
+            border: 2px solid #4CAF50;
+            border-radius: 5px;
+            font-family: 'Kadwa', serif;
+        }
+
+        .job-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .job-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .job-card:hover {
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            transform: translateY(-5px);
+        }
+
+        .job-card h3 {
+            color: #2E7D32;
+            margin-bottom: 0.5rem;
+        }
+
+        .job-status {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        .status-pending {
+            background-color: #ff9800;
+            color: white;
+        }
+
+        .status-in-progress {
+            background-color: #2196F3;
+            color: white;
+        }
+
+        .status-submitted {
+            background-color: #9C27B0;
+            color: white;
+        }
+
+        .status-completed {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .profile-container {
+            padding: 4rem 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .profile-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .verification-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 1rem 0;
+            padding: 1rem;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+
+        .tick {
+            font-size: 1.5rem;
+        }
+
+        .green-tick { color: #4CAF50; }
+        .blue-tick { color: #1E90FF; }
+
+        .plans-section {
+            margin-top: 2rem;
+        }
+
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .plan-card {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .plan-card:hover {
+            transform: scale(1.05);
+        }
+
+        .plan-card.vip {
+            background: linear-gradient(135deg, #1E90FF, #0066CC);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .close-btn {
+            font-size: 2rem;
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #2E7D32;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-family: 'Kadwa', serif;
+        }
+
+        .chat-container {
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .chat-message {
+            background: white;
+            padding: 0.8rem;
+            margin-bottom: 0.5rem;
+            border-radius: 5px;
+            border-left: 3px solid #4CAF50;
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-message.admin {
+            border-left-color: #2196F3;
+            background: #e3f2fd;
+        }
+
+        .chat-message.user {
+            border-left-color: #4CAF50;
+            background: #f1f8e9;
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+            color: #999;
+            margin-top: 0.3rem;
+        }
+
+        .message-sender {
+            font-weight: bold;
+            color: #2E7D32;
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 0.5rem;
+            color: #999;
+            font-style: italic;
+        }
+
+        .typing-indicator.active {
+            display: block;
+        }
+
+        .chat-input-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .chat-input-group input {
+            flex: 1;
+        }
+
+        .contact-container {
+            padding: 4rem 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .whatsapp-btn {
+            background-color: #25D366;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.2rem;
+            margin-top: 2rem;
+            transition: all 0.3s;
+        }
+
+        .whatsapp-btn:hover {
+            background-color: #20BA5A;
+            transform: scale(1.05);
+        }
+
+        .about-container {
+            padding: 4rem 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .about-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .objectives-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .objectives-list li {
+            padding: 1rem;
+            background: #f9f9f9;
+            margin-bottom: 0.5rem;
+            border-left: 4px solid #4CAF50;
+            border-radius: 3px;
+        }
+
+        .admin-container {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .admin-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .admin-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .admin-tab {
+            padding: 0.8rem 1.5rem;
+            background: white;
+            border: 2px solid #4CAF50;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .admin-tab.active {
+            background: #4CAF50;
+            color: white;
+        }
+
+        table {
+            width: 100%;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #2E7D32;
+            color: white;
+        }
+
+        .payment-screenshot {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .alert-box {
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            border-left: 4px solid #ff9800;
+            color: #856404;
+        }
+
+        .alert-info {
+            background-color: #d1ecf1;
+            border-left: 4px solid #0dcaf0;
+            color: #0c5460;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border-left: 4px solid #4CAF50;
+            color: #155724;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            border-left: 4px solid #f44336;
+            color: #721c24;
+        }
+
+        .copy-btn {
+            background: #2196F3;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 0.5rem;
+        }
+
+        .copy-btn:hover {
+            background: #1976D2;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+
+            .admin-tabs {
+                flex-direction: column;
+            }
+
+            .share-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">Kenya Writers Hub</div>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#" onclick="showPage('home')">Home</a></li>
+            <li><a href="#" onclick="showPage('jobs')">Jobs</a></li>
+            <li><a href="#" onclick="showPage('myJobs')" id="myJobsLink" class="hidden">My Jobs</a></li>
+            <li><a href="#" onclick="showPage('about')">About Us</a></li>
+            <li><a href="#" onclick="showPage('contact')">Contact</a></li>
+            <li><a href="#" onclick="showPage('support')" id="supportLink" class="hidden">Support Chat</a></li>
+        </ul>
+        <button class="hamburger" id="hamburgerBtn" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </nav>
+
+    <div class="menu-dropdown" id="menuDropdown">
+        <a href="#" onclick="showPage('home')">🏠 Home</a>
+        <a href="#" onclick="showPage('jobs')">💼 Jobs</a>
+        <a href="#" onclick="showPage('about')">ℹ️ About Us</a>
+        <a href="#" onclick="showPage('contact')">📞 Contact</a>
+        <div id="loggedInMenu" class="hidden">
+            <hr style="margin: 0.5rem 0;">
+            <a href="#" onclick="showPage('profile')">👤 Profile</a>
+            <a href="#" onclick="showPage('myJobs')">📋 My Jobs</a>
+            <a href="#" onclick="showPage('support')">💬 Support Chat</a>
+            <a href="#" onclick="showPage('admin')" id="adminLinkMenu" class="hidden">⚙️ Admin Dashboard</a>
+            <hr style="margin: 0.5rem 0;">
+            <a href="#" onclick="logout()">🚪 Logout</a>
+        </div>
+        <div id="loggedOutMenu">
+            <hr style="margin: 0.5rem 0;">
+            <a href="#" onclick="showModal('login')">🔐 Login</a>
+            <a href="#" onclick="showModal('signup')">✍️ Sign Up</a>
+        </div>
+    </div>
+
+    <!-- HOME PAGE -->
+    <div id="home" class="page active">
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Welcome to Kenya Writers Hub</h1>
+                <p>Connecting Talented Writers with Opportunities Across Kenya</p>
+                <button class="btn btn-primary" onclick="showModal('signup')">Get Started Today</button>
+            </div>
+        </section>
+
+        <section class="how-it-works">
+            <h2>How It Works</h2>
+            <div class="steps">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Create Your Account</h3>
+                    <p>Sign up quickly and set up your professional writer profile. Join our growing community of talented writers.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>Browse & Apply</h3>
+                    <p>Explore hundreds of writing opportunities posted by clients. Search by category and find jobs that match your skills.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>Get Verified</h3>
+                    <p>Upgrade your account to get verified status. Stand out from the crowd and access premium features.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h3>Start Earning</h3>
+                    <p>Complete projects, build your reputation, and grow your freelance writing career with us.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- JOBS PAGE -->
+    <div id="jobs" class="page">
+        <div class="jobs-container">
+            <h1 style="color: #2E7D32; margin-bottom: 2rem;">Available Jobs</h1>
+            
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search jobs by title, category, or keywords..." onkeyup="searchJobs()">
+                <button class="btn btn-primary" onclick="showModal('postJob')">Post a Job</button>
+            </div>
+
+            <div class="job-cards" id="jobCards"></div>
+        </div>
+    </div>
+
+    <!-- MY JOBS PAGE -->
+    <div id="myJobs" class="page">
+        <div class="jobs-container">
+            <h1 style="color: #2E7D32; margin-bottom: 2rem;">My Jobs</h1>
+            <div class="job-cards" id="myJobCards"></div>
+        </div>
+    </div>
+
+    <!-- ABOUT PAGE -->
+    <div id="about" class="page">
+        <div class="about-container">
+            <h1 style="color: #2E7D32; margin-bottom: 2rem;">About Kenya Writers Hub</h1>
+            
+            <div class="about-section">
+                <h2 style="color: #2E7D32;">Who We Are</h2>
+                <p>Kenya Writers Hub is a premier freelancing platform dedicated to connecting talented Kenyan writers with clients seeking high-quality content. We understand the challenges freelance writers face in finding consistent work and fair compensation. That's why we created a safe, transparent, and efficient marketplace where writers can showcase their skills and clients can find the perfect match for their projects.</p>
+            </div>
+
+            <div class="about-section">
+                <h2 style="color: #2E7D32;">Our Mission</h2>
+                <p>We aim to empower Kenyan writers by providing them with a reliable platform to access legitimate freelance opportunities. Our mission is to bridge the gap between skilled writers and businesses that need quality content, while ensuring fair payment and professional standards.</p>
+            </div>
+
+            <div class="about-section">
+                <h2 style="color: #2E7D32;">Our Objectives</h2>
+                <ul class="objectives-list">
+                    <li><strong>Facilitate Freelance Opportunities:</strong> Connect writers with diverse writing projects across various industries and niches.</li>
+                    <li><strong>Promote Quality Writing:</strong> Maintain high standards by verifying writers and ensuring quality content delivery.</li>
+                    <li><strong>Reward Active Members:</strong> Offer verification badges and VIP status to recognize and reward committed writers.</li>
+                    <li><strong>Create a Safe Workspace:</strong> Provide a secure platform for job posting, communication, and payment processing.</li>
+                    <li><strong>Build a Community:</strong> Foster a supportive network of writers who can share knowledge and grow together.</li>
+                    <li><strong>Support Kenyan Talent:</strong> Showcase the exceptional writing talent available in Kenya to local and international clients.</li>
+                </ul>
+            </div>
+
+            <div class="about-section">
+                <h2 style="color: #2E7D32;">Why Choose Us?</h2>
+                <p>Unlike other platforms, we focus specifically on the Kenyan market, understanding local needs and challenges. We offer verification systems that help writers stand out, VIP membership for enhanced visibility, and a user-friendly interface designed with African freelancers in mind. Join us today and be part of Kenya's fastest-growing writing community.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTACT PAGE -->
+    <div id="contact" class="page">
+        <div class="contact-container">
+            <h1 style="color: #2E7D32; margin-bottom: 2rem;">Contact Us</h1>
+            
+            <div class="about-section">
+                <h2>Get In Touch</h2>
+                <p>We're here to help! Whether you have questions about our platform, need assistance with your account, or want to discuss partnership opportunities, feel free to reach out to us.</p>
+                
+                <a href="https://wa.me/254792899405" target="_blank" class="whatsapp-btn">
+                    <span style="font-size: 2rem;">📱</span>
+                    Chat on WhatsApp
+                </a>
+                
+                <p style="margin-top: 2rem; color: #666;">
+                    <strong>Phone:</strong> 0792899405<br>
+                    <strong>Business Hours:</strong> Monday - Friday, 8AM - 6PM EAT
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUPPORT CHAT PAGE -->
+    <div id="support" class="page">
+        <div class="profile-container">
+            <h1 style="color: #2E7D32; margin-bottom: 2rem;">Support Chat</h1>
+            
+            <div class="profile-card">
+                <h3 style="color: #2E7D32; margin-bottom: 1rem;">Chat with Admin Support</h3>
+                <p style="color: #666; margin-bottom: 1rem;">Have questions? Need help? Chat directly with our admin team.</p>
+                
+                <div class="chat-container" id="supportChatContainer" style="max-height: 500px;">
+                    <p style="color: #999; text-align: center;">Start a conversation with admin support</p>
+                </div>
+                
+                <div class="typing-indicator" id="supportTypingIndicator">Admin is typing...</div>
+                
+                <div class="chat-input-group">
+                    <input type="text" id="supportMessageInput" placeholder="Type your message..." onkey
