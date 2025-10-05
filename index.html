@@ -1,0 +1,1915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KWH - Kenya Writers Hub | Professional Freelance Writing Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #8B0000 0%, #DC143C 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body.no-scroll {
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, rgba(139, 0, 0, 0.95), rgba(220, 20, 60, 0.95));
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid rgba(16, 185, 129, 0.5);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-accent {
+            color: #10b981;
+            font-size: 2rem;
+        }
+
+        .hamburger {
+            width: 30px;
+            height: 25px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 1001;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger:hover {
+            transform: scale(1.1);
+        }
+
+        .hamburger span {
+            width: 100%;
+            height: 3px;
+            background: #10b981;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(8px, -8px);
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 320px;
+            max-width: 85vw;
+            height: 100vh;
+            background: linear-gradient(180deg, #ffffff 0%, #f9fafb 100%);
+            box-shadow: -5px 0 25px rgba(0,0,0,0.3);
+            transition: right 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 2rem 1.5rem;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #10b981;
+            border-radius: 10px;
+        }
+
+        .sidebar.active {
+            right: 0;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(3px);
+            display: none;
+            z-index: 999;
+            transition: all 0.3s ease;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        .sidebar-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .profile-photo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #10b981, #059669);
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .profile-photo:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6);
+        }
+
+        .profile-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .verified-badge {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 0.3rem 0.7rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            margin-top: 0.5rem;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0.75rem;
+        }
+
+        .sidebar-menu button {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            text-align: left;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .sidebar-menu button:hover {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        .wallet-info {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 1.2rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero {
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+
+        .hero h1 {
+            background: linear-gradient(135deg, #10b981, #059669);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+            animation: slideDown 0.6s ease;
+            font-weight: 900;
+        }
+
+        .hero-subtitle {
+            color: #8B0000;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero p {
+            color: #666;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .office-container {
+            width: 100%;
+            max-width: 800px;
+            height: 450px;
+            margin: 2rem auto;
+            background: #f9fafb;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+            animation: zoomIn 0.8s ease;
+        }
+
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .office-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20px;
+        }
+
+        .office-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(16, 185, 129, 0.9), transparent);
+            padding: 2rem;
+            color: white;
+        }
+
+        .office-title {
+            font-size: 2rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 0.5rem;
+        }
+
+        .office-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: white;
+        }
+
+        .job-card {
+            background: linear-gradient(135deg, #f9fafb, #ffffff);
+            padding: 1.8rem;
+            border-radius: 15px;
+            margin-bottom: 1.2rem;
+            border-left: 5px solid #10b981;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        .job-card h3 {
+            color: #059669;
+            margin-bottom: 0.7rem;
+            font-size: 1.3rem;
+        }
+
+        .footer {
+            background: linear-gradient(135deg, rgba(139, 0, 0, 0.95), rgba(220, 20, 60, 0.95));
+            padding: 2.5rem;
+            text-align: center;
+            margin-top: 3rem;
+            border-radius: 20px;
+            color: white;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.2);
+            border-top: 3px solid rgba(16, 185, 129, 0.5);
+        }
+
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.2rem;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .alert.success {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid #10b981;
+        }
+
+        .alert.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid #ef4444;
+        }
+
+        .alert.active {
+            display: block;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.6rem;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .form-group input, textarea {
+            width: 100%;
+            padding: 0.9rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus, textarea:focus {
+            outline: none;
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        .upload-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-block;
+            margin-top: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .upload-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .job-work-area {
+            background: #f9fafb;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-top: 1.5rem;
+            border: 2px solid #10b981;
+        }
+
+        .work-status {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-left: 1rem;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-submitted {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-approved {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .admin-section {
+            background: linear-gradient(135deg, #1f2937, #374151);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+        }
+
+        .admin-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .invite-link-section {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .screenshot-preview {
+            max-width: 100%;
+            max-height: 300px;
+            margin: 1rem 0;
+            border-radius: 10px;
+            border: 2px solid #10b981;
+        }
+
+        .refer-box {
+            background: linear-gradient(135deg, #10b981, #059669);
+            padding: 2.5rem;
+            border-radius: 20px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+        }
+
+        .refer-link {
+            background: white;
+            color: #333;
+            padding: 1.2rem;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .office-container {
+                height: 350px;
+            }
+
+            .container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+
+            .btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1.3rem;
+            }
+
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .office-container {
+                height: 280px;
+            }
+        }
+
+        .auth-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.4);
+            z-index: 1001;
+            width: 90%;
+            max-width: 450px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .auth-modal.active {
+            display: block;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #e5e7eb;
+            gap: 1rem;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 1rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .tab.active {
+            border-bottom-color: #10b981;
+            color: #10b981;
+        }
+
+        .close-modal-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 10px rgba(239, 68, 68, 0.4);
+            transition: all 0.3s;
+        }
+
+        .close-modal-btn:hover {
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        .job-post-form {
+            background: linear-gradient(135deg, #f9fafb, #ffffff);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <span class="logo-accent">✍️</span> KWH
+        </div>
+        <div class="hamburger" onclick="toggleSidebar()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+
+    <div class="overlay" onclick="closeOverlay()"></div>
+
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="profile-photo" onclick="document.getElementById('photoUpload').click()">
+                <span id="profileInitial">👤</span>
+            </div>
+            <input type="file" id="photoUpload" accept="image/*" onchange="uploadPhoto(event)">
+            <div id="userName" style="font-weight: bold; font-size: 1.1rem;">Guest User</div>
+            <div id="userEmail" style="color: #666; font-size: 0.9rem; margin-top: 0.3rem;"></div>
+            <div id="verifiedBadge" class="verified-badge hidden">✓ Verified</div>
+        </div>
+
+        <ul class="sidebar-menu">
+            <li><button onclick="showPage('home'); toggleSidebar()">🏠 Home</button></li>
+            <li><button onclick="showPage('jobs'); toggleSidebar()">💼 Jobs</button></li>
+            <li><button onclick="showPage('about'); toggleSidebar()">ℹ️ About</button></li>
+            <li><button onclick="showPage('contact'); toggleSidebar()">📞 Contact</button></li>
+            <li><button onclick="showPage('refer'); toggleSidebar()">🎁 Refer</button></li>
+        </ul>
+
+        <div id="userOptions" class="hidden">
+            <div class="wallet-info">
+                <div style="font-size: 0.9rem; opacity: 0.9;">💰 Wallet Balance</div>
+                <div style="font-size: 1.8rem; font-weight: bold; margin: 0.7rem 0;" id="walletBalance">KSh 0</div>
+                <button class="btn btn-success" onclick="withdrawMoney()" style="width: 100%; margin-top: 0.5rem; padding: 0.7rem;">Withdraw</button>
+            </div>
+
+            <ul class="sidebar-menu">
+                <li><button onclick="showPage('myJobs'); toggleSidebar()">📋 My Jobs</button></li>
+                <li><button onclick="showPage('activate'); toggleSidebar()">✓ Activate</button></li>
+                <li><button onclick="showPage('vip'); toggleSidebar()">⭐ VIP</button></li>
+                <li id="adminMenuBtn" class="hidden"><button onclick="showPage('admin'); toggleSidebar()">👑 Admin</button></li>
+                <li><button class="btn-danger" onclick="logout()" style="background: linear-gradient(135deg, #ef4444, #dc2626); color: white;">🚪 Logout</button></li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="homePage" class="container">
+        <div class="hero">
+            <div class="hero-subtitle">Professional Freelance Platform</div>
+            <h1>Kenya Writers Hub</h1>
+            <p>Empowering Kenyan Writers | Connecting Global Opportunities</p>
+            
+            <div class="office-container">
+                <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=450&fit=crop&q=80" 
+                     alt="People working in office" 
+                     class="office-image"
+                     onerror="this.src='https://images.pexels.com/photos/3184292/pexels-photo-3184292.jpeg?auto=compress&cs=tinysrgb&w=800&h=450&fit=crop'">
+                <div class="office-overlay">
+                    <div class="office-title">🖊️ Professional Writers at Work</div>
+                    <div class="office-subtitle">Join our community of talented Kenyan writers</div>
+                </div>
+            </div>
+
+            <div id="adminInviteDisplay" class="hidden" style="margin: 2rem auto; max-width: 600px;">
+                <div class="invite-link-section">
+                    <h3 style="margin-bottom: 1rem;">📢 Special Invite Link</h3>
+                    <div style="background: rgba(255,255,255,0.2); padding: 1rem; border-radius: 10px; margin: 1rem 0;">
+                        <p id="adminInviteLinkDisplay" style="word-break: break-all; font-family: monospace;">No invite link posted yet</p>
+                    </div>
+                    <button class="btn" style="background: white; color: #059669;" onclick="copyAdminInviteLink()">📋 Copy Link</button>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="showAuthModal()">🚀 Get Started Now</button>
+        </div>
+
+        <div class="footer">
+            <p style="font-size: 1.2rem;"><strong>🌍 Connecting Talented Writers with Global Opportunities</strong></p>
+            <p style="margin-top: 1rem; opacity: 0.9;">© 2025 Kenya Writers Hub | Professional Freelancing Platform</p>
+        </div>
+    </div>
+
+    <div id="jobsPage" class="container hidden">
+        <h1 style="background: linear-gradient(135deg, #10b981, #059669); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 2rem;">💼 Job Marketplace</h1>
+        
+        <div class="job-post-form">
+            <h2 style="color: #059669; margin-bottom: 1.5rem;">📝 Post a New Job</h2>
+            <div class="form-group">
+                <label>Job Title</label>
+                <input type="text" id="jobTitle" placeholder="e.g., SEO Article Writer Needed">
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="jobDesc" placeholder="Describe job requirements, deliverables, and expectations..." style="min-height: 120px;"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Budget (KSh)</label>
+                <input type="number" id="jobBudget" placeholder="e.g., 5000">
+            </div>
+            <div class="form-group">
+                <label>Attach File (Optional)</label>
+                <input type="file" id="jobFile">
+                <label for="jobFile" class="upload-btn">📎 Choose File</label>
+                <span id="fileName" style="margin-left: 1rem; color: #666;"></span>
+            </div>
+            <button class="btn btn-primary" onclick="postJob()">📤 Post Job</button>
+        </div>
+
+        <div id="alertBox" class="alert"></div>
+
+        <h2 style="color: #059669; margin-bottom: 1.5rem;">🔥 Available Opportunities</h2>
+        <div id="jobsList">
+            <div class="job-card">
+                <h3>📝 Blog Writer for Tourism Content</h3>
+                <p style="margin: 0.5rem 0;"><strong>Budget:</strong> KSh 3,000</p>
+                <p style="color: #666; line-height: 1.6;">Looking for a creative writer to create 5 engaging blog posts about Kenyan tourism destinations.</p>
+                <button class="btn btn-success" onclick="applyJob(this, 0)" style="margin-top: 1rem; padding: 0.7rem 1.5rem;">Apply Now</button>
+            </div>
+            <div class="job-card">
+                <h3>📚 Academic Research Paper Writer</h3>
+                <p style="margin: 0.5rem 0;"><strong>Budget:</strong> KSh 8,000</p>
+                <p style="color: #666; line-height: 1.6;">Need assistance with a 10-page research paper focusing on sustainable agriculture in Kenya.</p>
+                <button class="btn btn-success" onclick="applyJob(this, 1)" style="margin-top: 1rem; padding: 0.7rem 1.5rem;">Apply Now</button>
+            </div>
+            <div class="job-card">
+                <h3>📱 Social Media Content Creator</h3>
+                <p style="margin: 0.5rem 0;"><strong>Budget:</strong> KSh 5,000</p>
+                <p style="color: #666; line-height: 1.6;">Create 20 engaging social media posts for Instagram and Facebook business pages.</p>
+                <button class="btn btn-success" onclick="applyJob(this, 2)" style="margin-top: 1rem; padding: 0.7rem 1.5rem;">Apply Now</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="aboutPage" class="container hidden">
+        <h1 style="background: linear-gradient(135deg, #10b981, #059669); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 2rem;">ℹ️ About KWH</h1>
+        <p style="font-size: 1.1rem; line-height: 1.8; color: #333; margin-bottom: 2rem;">
+            Kenya Writers Hub (KWH) is a premier professional freelancing platform connecting skilled Kenyan writers with clients seeking quality content. 
+            Our platform enables writers to create profiles, browse opportunities, submit work, and get verified while ensuring secure payments and professional growth.
+        </p>
+        <div style="margin-top: 2rem; padding: 2.5rem; background: linear-gradient(135deg, #f9fafb, #ffffff); border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
+            <h2 style="color: #059669; margin-bottom: 1.5rem;">🎯 How It Works</h2>
+            <ul style="list-style: none; padding: 0;">
+                <li style="padding: 0.8rem 0; font-size: 1.05rem;"><strong>✅ Sign Up</strong> - Create your professional writer profile</li>
+                <li style="padding: 0.8rem 0; font-size: 1.05rem;"><strong>✅ Browse Jobs</strong> - Explore available writing opportunities</li>
+                <li style="padding: 0.8rem 0; font-size: 1.05rem;"><strong>✅ Apply & Work</strong> - Submit applications and complete assignments</li>
+                <li style="padding: 0.8rem 0; font-size: 1.05rem;"><strong>✅ Get Paid</strong> - Receive secure payments to your wallet</li>
+                <li style="padding: 0.8rem 0; font-size: 1.05rem;"><strong>✅ Grow</strong> - Build your reputation and expand your network</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="contactPage" class="container hidden">
+        <h1 style="background: linear-gradient(135deg, #10b981, #059669); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 2rem;">📞 Contact Support</h1>
+        <div style="text-align: center; padding: 3rem; background: linear-gradient(135deg, #10b981, #059669); border-radius: 20px; color: white; box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);">
+            <h2 style="margin-bottom: 1.5rem;">💬 Need Help?</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 2rem; opacity: 0.95;">Contact us on WhatsApp for instant support!</p>
+            <a href="https://wa.me/254792899405" target="_blank" class="btn btn-warning" style="text-decoration: none; display: inline-block; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                📱 WhatsApp: +254 792 899405
+            </a>
+        </div>
+    </div>
+
+    <div id="referPage" class="container hidden">
+        <h1 style="background: linear-gradient(135deg, #10b981, #059669); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 2rem;">🎁 Referral Program</h1>
+        <div class="refer-box">
+            <h2 style="font-size: 2rem; margin-bottom: 1rem;">💰 Earn KSh 1,000 Bonus!</h2>
+            <p style="margin: 1rem 0; font-size: 1.1rem; opacity: 0.95;">Share your referral link with 20 people and earn KSh 1,000</p>
+            <div class="refer-link" id="referLink">https://kenyawritershub.com/ref/USER123</div>
+            <button class="btn" style="background: white; color: #059669; margin-top: 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.2);" onclick="copyReferLink()">📋 Copy Referral Link</button>
+            <p style="margin-top: 1.5rem; font-size: 1.1rem; background: rgba(255,255,255,0.2); padding: 1rem; border-radius: 10px;">Referrals: <strong><span id="referCount">0</span> / 20</strong></p>
+        </div>
+    </div>
+
+    <div id="myJobsPage" class="container hidden">
+        <h1 style="background: linear-gradient(135deg, #10b981, #059669); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 2rem;">📋 My Jobs Dashboard</h1>
+        
+        <div class="job-card">
+            <h3>📤 Jobs In Progress</h3>
+            <div id="workingJobs" style="color: #666; margin-top: 0.5rem;">No active jobs</div>
+        </div>
+
+        <div class="job-card" style="border-left-color: #fbbf24;">
+            <h3>⏳ Submitted Jobs (Awaiting Approval)</h3>
+            <div id="submittedJobs" style="color: #666; margin-top: 0.5rem;">No submitted jobs</div>
+        </div>
+
+        <div class="job-card" style="border-left-color: #10b981;">
+            <h3>✅ Approved & Paid Jobs</h3>
+            <div id="completedJobs" style="color: #666; margin-top: 0.5rem;">No completed jobs yet</div>
+        </div>
+
+        <div class="job-card" style="border-left-color: #ef4444;">
+            <h3>❌ Rejected Jobs</h3>
+            <div id="rejectedJobs" style="color: #666; margin-top: 0.5rem;">No rejected jobs</div>
+        </div>
+    </div>
+
+    <div id="activatePage" class="container hidden">
+        <h1 style="background: linear-gradient(135deg, #10b981, #059669); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 2rem;">✓ Activate Account</h1>
+        <div style="background: linear-gradient(135deg, #f9fafb, #ffffff); padding: 2.5rem; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
+            <h2 style="color: #059669; margin-bottom: 1rem;">🌟 Get Verified Badge</h2>
+            <p style="margin: 1.5rem 0; font-size: 1.1rem; color: #666; line-height: 1.8;">Activate your account to gain client trust and access premium features</p>
+            <div style="margin: 2rem 0; padding: 2rem; background: linear-gradient(135deg, #10b981, #059669); color: white; border-radius: 15px;">
+                <p style="font-size: 1.1rem; margin-bottom: 0.7rem;"><strong>💳 Payment Method:</strong> Pochi La Biashara</p>
+                <p style="font-size: 1.1rem; margin-bottom: 0.7rem;"><strong>📞 Number:</strong> 0114706482</p>
+                <p style="font-size: 1.3rem; font-weight: bold;"><strong>💰 Amount:</strong> KSh 500</p>
+            </div>
+
+            <div class="form-group">
+                <label>📸 Upload Payment Screenshot</label>
+                <input type="file" id="activationScreenshot" accept="image/*">
+                <label for="activationScreenshot" class="upload-btn">📷 Choose Screenshot</label>
+                <img id="activationPreview" class="screenshot-preview hidden" alt="Payment Screenshot">
+            </div>
+
+            <button class="btn btn-success" onclick="activateAccount()">✓ Submit for Activation</button>
+            
+            <div id="activationStatus" class="hidden" style="margin-top: 1rem; padding: 1rem; background: #fef3c7; color: #92400e; border-radius: 10px;">
+                <strong>⏰ Activation Pending</strong>
+                <p style="margin-top: 0.5rem;">Your request is under admin review. Approval within 1-5 hours.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="vipPage" class="container hidden">
+        <h1 style="background: linear-gradient(135deg, #10b981, #059669); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 2rem;">⭐ VIP Membership</h1>
+        <div style="background: linear-gradient(135deg, #fbbf24, #f59e0b); padding: 2.5rem; border-radius: 20px; color: white; box-shadow: 0 10px 30px rgba(251, 191, 36, 0.4);">
+            <h2 style="font-size: 2rem; margin-bottom: 1rem;">🌟 Upgrade to VIP</h2>
+            <p style="margin: 1rem 0; font-size: 1.1rem; opacity: 0.95;">Connect with global clients and unlock premium features</p>
+            <ul style="list-style: none; padding: 0; margin: 2rem 0;">
+                <li style="padding: 0.7rem 0; font-size: 1.1rem;">✅ Global client access</li>
+                <li style="padding: 0.7rem 0; font-size: 1.1rem;">✅ Priority job listings</li>
+                <li style="padding: 0.7rem 0; font-size: 1.1rem;">✅ Higher earning potential</li>
+                <li style="padding: 0.7rem 0; font-size: 1.1rem;">✅ VIP badge & recognition</li>
+            </ul>
+            <div style="margin: 2rem 0; background: rgba(255,255,255,0.25); padding: 1.5rem; border-radius: 12px;">
+                <p style="font-size: 1.1rem; margin-bottom: 0.7rem;"><strong>💳 Payment Method:</strong> Pochi La Biashara</p>
+                <p style="font-size: 1.1rem; margin-bottom: 0.7rem;"><strong>📞 Number:</strong> 0114706482</p>
+                <p style="font-size: 1.3rem; font-weight: bold;"><strong>💰 Amount:</strong> KSh 1,500</p>
+            </div>
+
+            <div class="form-group">
+                <label>📸 Upload Payment Screenshot</label>
+                <input type="file" id="vipScreenshot" accept="image/*">
+                <label for="vipScreenshot" class="upload-btn" style="background: white; color: #f59e0b;">📷 Choose Screenshot</label>
+                <img id="vipPreview" class="screenshot-preview hidden" alt="Payment Screenshot">
+            </div>
+
+            <button class="btn" style="background: white; color: #f59e0b; font-size: 1.1rem;" onclick="upgradeToVIP()">⭐ Submit VIP Request</button>
+            
+            <div id="vipStatus" class="hidden" style="margin-top: 1rem; padding: 1rem; background: rgba(255,255,255,0.3); border-radius: 10px;">
+                <strong>⏰ VIP Upgrade Pending</strong>
+                <p style="margin-top: 0.5rem;">Your request is under admin review. Approval within 1-5 hours.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="adminPage" class="container hidden">
+        <h1 style="background: linear-gradient(135deg, #10b981, #059669); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 2rem;">👑 Admin Dashboard</h1>
+        
+        <div class="admin-section">
+            <h2 style="margin-bottom: 1.5rem;">📢 Post Invite Link</h2>
+            <div class="form-group">
+                <label>Invite Link URL</label>
+                <input type="text" id="adminInviteLink" placeholder="https://example.com/join" style="background: rgba(255,255,255,0.9);">
+            </div>
+            <button class="btn btn-success" onclick="postInviteLink()">📤 Publish Link</button>
+        </div>
+
+        <div class="admin-section">
+            <h2 style="margin-bottom: 1.5rem;">💰 Wallet Management</h2>
+            <div id="adminWallets"></div>
+        </div>
+
+        <div class="admin-section">
+            <h2 style="margin-bottom: 1.5rem;">✓ Activation Requests</h2>
+            <div id="activationRequests"></div>
+        </div>
+
+        <div class="admin-section">
+            <h2 style="margin-bottom: 1.5rem;">⭐ VIP Upgrade Requests</h2>
+            <div id="vipRequests"></div>
+        </div>
+
+        <div class="admin-section">
+            <h2 style="margin-bottom: 1.5rem;">💼 Job Management</h2>
+            <div id="adminJobsList"></div>
+        </div>
+
+        <div class="admin-section">
+            <h2 style="margin-bottom: 1.5rem;">📝 Work Submissions</h2>
+            <div id="adminWorkSubmissions"></div>
+        </div>
+    </div>
+
+    <div class="auth-modal" id="authModal">
+        <button class="close-modal-btn" onclick="closeAuthModal()">✕</button>
+        <h2 style="background: linear-gradient(135deg, #10b981, #059669); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; margin-bottom: 1.5rem; font-size: 1.8rem;">Welcome to KWH! 👋</h2>
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('signup')">Sign Up</button>
+            <button class="tab" onclick="switchTab('signin')">Sign In</button>
+        </div>
+
+        <div id="alertAuth" class="alert"></div>
+
+        <div id="signupForm">
+            <div class="form-group">
+                <label>👤 Full Name</label>
+                <input type="text" id="signupName" placeholder="Enter your full name">
+            </div>
+            <div class="form-group">
+                <label>📧 Email Address</label>
+                <input type="email" id="signupEmail" placeholder="your@email.com">
+            </div>
+            <div class="form-group">
+                <label>🔒 Password</label>
+                <input type="password" id="signupPassword" placeholder="Create a strong password">
+            </div>
+            <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;" onclick="signup()">🚀 Create Account</button>
+        </div>
+
+        <div id="signinForm" class="hidden">
+            <div class="form-group">
+                <label>📧 Email Address</label>
+                <input type="email" id="signinEmail" placeholder="your@email.com">
+            </div>
+            <div class="form-group">
+                <label>🔒 Password</label>
+                <input type="password" id="signinPassword" placeholder="Enter your password">
+            </div>
+            <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;" onclick="signin()">🔓 Sign In</button>
+            <p style="text-align: center; margin-top: 1.5rem; color: #666; font-size: 0.95rem;">Forgot password? Contact admin</p>
+        </div>
+    </div>
+
+    <script>
+        let users = [
+            {email: 'admin@kenyawritershub.com', password: 'admin123', name: 'Admin', isAdmin: true}
+        ];
+        let currentUser = null;
+        let jobs = [
+            {id: 1, title: 'Blog Writer for Tourism Content', budget: 3000, description: 'Looking for a creative writer to create 5 engaging blog posts about Kenyan tourism destinations.', postedBy: 'client1@example.com', postedByName: 'Tourism Kenya', status: 'open'},
+            {id: 2, title: 'Academic Research Paper Writer', budget: 8000, description: 'Need assistance with a 10-page research paper focusing on sustainable agriculture in Kenya.', postedBy: 'client2@example.com', postedByName: 'University Research', status: 'open'},
+            {id: 3, title: 'Social Media Content Creator', budget: 5000, description: 'Create 20 engaging social media posts for Instagram and Facebook business pages.', postedBy: 'client3@example.com', postedByName: 'Marketing Pro', status: 'open'}
+        ];
+        let userJobs = [];
+        let workSubmissions = [];
+        let activationRequests = [];
+        let vipRequests = [];
+        let adminInviteLink = '';
+
+        document.getElementById('jobFile').onchange = function() {
+            document.getElementById('fileName').textContent = this.files[0]?.name || '';
+        };
+
+        document.getElementById('activationScreenshot').onchange = function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.getElementById('activationPreview').src = event.target.result;
+                    document.getElementById('activationPreview').classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        document.getElementById('vipScreenshot').onchange = function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.getElementById('vipPreview').src = event.target.result;
+                    document.getElementById('vipPreview').classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.overlay');
+            const hamburger = document.querySelector('.hamburger');
+            const body = document.body;
+            
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            hamburger.classList.toggle('active');
+            body.classList.toggle('no-scroll');
+        }
+
+        function closeOverlay() {
+            const sidebar = document.querySelector('.sidebar');
+            const authModal = document.getElementById('authModal');
+            
+            if (sidebar.classList.contains('active')) {
+                toggleSidebar();
+            }
+            if (authModal.classList.contains('active')) {
+                closeAuthModal();
+            }
+        }
+
+        function showPage(page) {
+            document.querySelectorAll('.container').forEach(p => p.classList.add('hidden'));
+            
+            const pages = {
+                'home': 'homePage',
+                'jobs': 'jobsPage',
+                'about': 'aboutPage',
+                'contact': 'contactPage',
+                'refer': 'referPage',
+                'myJobs': 'myJobsPage',
+                'activate': 'activatePage',
+                'vip': 'vipPage',
+                'admin': 'adminPage'
+            };
+            
+            const pageId = pages[page];
+            if (pageId) {
+                document.getElementById(pageId).classList.remove('hidden');
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            }
+
+            if (!currentUser && (page === 'myJobs' || page === 'activate' || page === 'vip' || page === 'admin')) {
+                showAlert('Please sign in to access this page', 'error', 'alertBox');
+                showPage('home');
+                showAuthModal();
+                return;
+            }
+
+            if (page === 'admin' && currentUser && !currentUser.isAdmin) {
+                showAlert('Admin access only!', 'error', 'alertBox');
+                showPage('home');
+                return;
+            }
+
+            if (page === 'admin' && currentUser && currentUser.isAdmin) {
+                loadAdminDashboard();
+            }
+
+            if (page === 'myJobs' && currentUser) {
+                loadMyJobs();
+            }
+        }
+
+        function showAuthModal() {
+            document.getElementById('authModal').classList.add('active');
+            document.querySelector('.overlay').classList.add('active');
+            document.body.classList.add('no-scroll');
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModal').classList.remove('active');
+            if (!document.querySelector('.sidebar').classList.contains('active')) {
+                document.querySelector('.overlay').classList.remove('active');
+                document.body.classList.remove('no-scroll');
+            }
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (tab === 'signup') {
+                document.getElementById('signupForm').classList.remove('hidden');
+                document.getElementById('signinForm').classList.add('hidden');
+            } else {
+                document.getElementById('signupForm').classList.add('hidden');
+                document.getElementById('signinForm').classList.remove('hidden');
+            }
+        }
+
+        function showAlert(message, type, elementId) {
+            const alert = document.getElementById(elementId);
+            alert.textContent = message;
+            alert.className = `alert ${type} active`;
+            setTimeout(() => alert.classList.remove('active'), 4000);
+        }
+
+        function signup() {
+            const name = document.getElementById('signupName').value.trim();
+            const email = document.getElementById('signupEmail').value.trim().toLowerCase();
+            const password = document.getElementById('signupPassword').value;
+
+            if (!name || !email || !password) {
+                showAlert('Please fill all fields', 'error', 'alertAuth');
+                return;
+            }
+
+            if (users.find(u => u.email === email)) {
+                showAlert('Email already registered!', 'error', 'alertAuth');
+                return;
+            }
+
+            users.push({
+                name: name,
+                email: email,
+                password: password,
+                balance: 0,
+                verified: false,
+                vip: false,
+                photo: null,
+                activationPending: false,
+                vipPending: false
+            });
+
+            localStorage.setItem('allUsers', JSON.stringify(users));
+
+            showAlert('Account created successfully! Please sign in.', 'success', 'alertAuth');
+            
+            setTimeout(() => {
+                document.getElementById('signupName').value = '';
+                document.getElementById('signupEmail').value = '';
+                document.getElementById('signupPassword').value = '';
+                document.getElementById('signinEmail').value = email;
+                switchTab('signin');
+                document.querySelectorAll('.tab')[1].click();
+            }, 1500);
+        }
+
+        function signin() {
+            const email = document.getElementById('signinEmail').value.trim().toLowerCase();
+            const password = document.getElementById('signinPassword').value;
+
+            if (!email || !password) {
+                showAlert('Please fill all fields', 'error', 'alertAuth');
+                return;
+            }
+
+            const user = users.find(u => u.email === email);
+            
+            if (!user) {
+                showAlert('Email not found! Please sign up.', 'error', 'alertAuth');
+                return;
+            }
+
+            if (user.password !== password) {
+                showAlert('Wrong password!', 'error', 'alertAuth');
+                return;
+            }
+
+            currentUser = user;
+            localStorage.setItem('currentUserEmail', email);
+            localStorage.setItem('stayLoggedIn', 'true');
+            
+            updateUserInterface();
+            closeAuthModal();
+            showAlert(`Welcome back, ${user.name}! 🎉`, 'success', 'alertBox');
+            
+            if (user.isAdmin) {
+                showAlert('Admin access granted! 👑', 'success', 'alertBox');
+            }
+        }
+
+        function updateUserInterface() {
+            if (currentUser) {
+                document.getElementById('userName').textContent = currentUser.name;
+                document.getElementById('userEmail').textContent = currentUser.email;
+                document.getElementById('walletBalance').textContent = `KSh ${currentUser.balance || 0}`;
+                document.getElementById('userOptions').classList.remove('hidden');
+                
+                if (currentUser.verified) {
+                    document.getElementById('verifiedBadge').classList.remove('hidden');
+                }
+                
+                if (currentUser.photo) {
+                    document.getElementById('profileInitial').innerHTML = `<img src="${currentUser.photo}" alt="Profile">`;
+                } else {
+                    document.getElementById('profileInitial').textContent = currentUser.name.charAt(0).toUpperCase();
+                }
+                
+                document.getElementById('referLink').textContent = `https://kenyawritershub.com/ref/${currentUser.email.split('@')[0]}`;
+
+                if (currentUser.isAdmin) {
+                    document.getElementById('adminMenuBtn').classList.remove('hidden');
+                }
+
+                if (adminInviteLink) {
+                    document.getElementById('adminInviteDisplay').classList.remove('hidden');
+                    document.getElementById('adminInviteLinkDisplay').textContent = adminInviteLink;
+                }
+            }
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.setItem('allUsers', JSON.stringify(users));
+                
+                currentUser = null;
+                localStorage.removeItem('currentUserEmail');
+                localStorage.removeItem('stayLoggedIn');
+                
+                document.getElementById('userName').textContent = 'Guest User';
+                document.getElementById('userEmail').textContent = '';
+                document.getElementById('userOptions').classList.add('hidden');
+                document.getElementById('verifiedBadge').classList.add('hidden');
+                document.getElementById('profileInitial').textContent = '👤';
+                document.getElementById('adminMenuBtn').classList.add('hidden');
+                
+                showPage('home');
+                showAlert('Logged out successfully', 'success', 'alertBox');
+            }
+        }
+
+        function uploadPhoto(event) {
+            if (!currentUser) {
+                showAlert('Please sign in first', 'error', 'alertBox');
+                return;
+            }
+
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentUser.photo = e.target.result;
+                    document.getElementById('profileInitial').innerHTML = `<img src="${e.target.result}" alt="Profile">`;
+                    localStorage.setItem('allUsers', JSON.stringify(users));
+                    showAlert('Photo uploaded successfully! 📸', 'success', 'alertBox');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function postJob() {
+            if (!currentUser) {
+                showAlert('Please sign in to post a job', 'error', 'alertBox');
+                showAuthModal();
+                return;
+            }
+
+            const title = document.getElementById('jobTitle').value.trim();
+            const desc = document.getElementById('jobDesc').value.trim();
+            const budget = document.getElementById('jobBudget').value;
+
+            if (!title || !desc || !budget) {
+                showAlert('Please fill all fields', 'error', 'alertBox');
+                return;
+            }
+
+            const job = {
+                id: Date.now(),
+                title: title,
+                description: desc,
+                budget: budget,
+                postedBy: currentUser.email,
+                postedByName: currentUser.name,
+                status: 'open',
+                postedAt: new Date().toLocaleString()
+            };
+
+            jobs.push(job);
+            localStorage.setItem('allJobs', JSON.stringify(jobs));
+
+            const jobCard = document.createElement('div');
+            jobCard.className = 'job-card';
+            jobCard.innerHTML = `
+                <h3>📝 ${title}</h3>
+                <p style="margin: 0.5rem 0;"><strong>Budget:</strong> KSh ${budget}</p>
+                <p style="color: #666; line-height: 1.6;">${desc}</p>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: #999;">Posted by: ${currentUser.name}</p>
+                <button class="btn btn-success" onclick="applyJob(this, ${jobs.length - 1})" style="margin-top: 1rem; padding: 0.7rem 1.5rem;">Apply Now</button>
+            `;
+
+            document.getElementById('jobsList').insertBefore(jobCard, document.getElementById('jobsList').firstChild);
+
+            document.getElementById('jobTitle').value = '';
+            document.getElementById('jobDesc').value = '';
+            document.getElementById('jobBudget').value = '';
+            document.getElementById('jobFile').value = '';
+            document.getElementById('fileName').textContent = '';
+
+            showAlert('Job posted successfully! 🎉', 'success', 'alertBox');
+        }
+
+        function applyJob(button, jobIndex) {
+            if (!currentUser) {
+                showAlert('Please sign in to apply for jobs', 'error', 'alertBox');
+                showAuthModal();
+                return;
+            }
+
+            const job = jobs[jobIndex];
+            const existingJob = userJobs.find(uj => uj.jobId === job.id && uj.userEmail === currentUser.email);
+            
+            if (existingJob) {
+                showAlert('You already applied for this job!', 'error', 'alertBox');
+                return;
+            }
+
+            const userJob = {
+                jobId: job.id,
+                jobTitle: job.title,
+                jobBudget: job.budget,
+                jobOwner: job.postedBy,
+                jobOwnerName: job.postedByName,
+                userEmail: currentUser.email,
+                userName: currentUser.name,
+                status: 'working',
+                appliedAt: new Date().toLocaleString(),
+                workContent: null,
+                workFile: null,
+                submittedAt: null
+            };
+
+            userJobs.push(userJob);
+            localStorage.setItem('allUserJobs', JSON.stringify(userJobs));
+
+            button.textContent = '✓ Applied - Start Working';
+            button.disabled = true;
+            button.style.background = '#9ca3af';
+            button.style.cursor = 'not-allowed';
+
+            showAlert('Job accepted! Go to "My Jobs" to work on it. 🎉', 'success', 'alertBox');
+            setTimeout(() => {
+                showPage('myJobs');
+            }, 2000);
+        }
+
+        function loadMyJobs() {
+            const myJobs = userJobs.filter(uj => uj.userEmail === currentUser.email);
+
+            const workingJobs = myJobs.filter(uj => uj.status === 'working');
+            const submittedJobs = myJobs.filter(uj => uj.status === 'submitted');
+            const completedJobs = myJobs.filter(uj => uj.status === 'approved');
+            const rejectedJobs = myJobs.filter(uj => uj.status === 'rejected');
+
+            const workingDiv = document.getElementById('workingJobs');
+            if (workingJobs.length === 0) {
+                workingDiv.innerHTML = '<p style="color: #666;">No active jobs</p>';
+            } else {
+                let html = '';
+                workingJobs.forEach((job, index) => {
+                    html += `
+                        <div class="job-work-area" style="margin-bottom: 1rem;">
+                            <h4 style="color: #059669; margin-bottom: 1rem;">${job.jobTitle}</h4>
+                            <p style="margin-bottom: 0.5rem;"><strong>Budget:</strong> KSh ${job.jobBudget}</p>
+                            <p style="margin-bottom: 0.5rem;"><strong>Client:</strong> ${job.jobOwnerName}</p>
+                            <span class="work-status status-pending">⚡ In Progress</span>
+                            
+                            <div style="margin-top: 1.5rem;">
+                                <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">📝 Submit Your Work:</label>
+                                <textarea id="workContent_${index}" placeholder="Paste your completed work here..." style="width: 100%; min-height: 150px; padding: 1rem; border: 2px solid #10b981; border-radius: 10px; font-size: 1rem;"></textarea>
+                                
+                                <div style="margin-top: 1rem;">
+                                    <input type="file" id="workFile_${index}" accept=".pdf,.doc,.docx,.txt">
+                                    <label for="workFile_${index}" class="upload-btn">📎 Attach File (Optional)</label>
+                                    <span id="workFileName_${index}" style="margin-left: 1rem; color: #666;"></span>
+                                </div>
+                                
+                                <button class="btn btn-success" onclick="submitWork(${index})" style="margin-top: 1rem;">📤 Submit Work for Approval</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                workingDiv.innerHTML = html;
+
+                workingJobs.forEach((job, index) => {
+                    document.getElementById(`workFile_${index}`).onchange = function() {
+                        document.getElementById(`workFileName_${index}`).textContent = this.files[0]?.name || '';
+                    };
+                });
+            }
+
+            const submittedDiv = document.getElementById('submittedJobs');
+            if (submittedJobs.length === 0) {
+                submittedDiv.innerHTML = '<p style="color: #666;">No submitted jobs</p>';
+            } else {
+                let html = '<ul style="list-style: none; padding: 0;">';
+                submittedJobs.forEach(job => {
+                    html += `<li style="padding: 0.7rem 0; border-bottom: 1px solid #eee;">
+                        ${job.jobTitle} - <span class="work-status status-submitted">⏳ Awaiting Approval</span>
+                        <br><small style="color: #999;">Submitted: ${job.submittedAt}</small>
+                    </li>`;
+                });
+                html += '</ul>';
+                submittedDiv.innerHTML = html;
+            }
+
+            const completedDiv = document.getElementById('completedJobs');
+            if (completedJobs.length === 0) {
+                completedDiv.innerHTML = '<p style="color: #666;">No completed jobs yet</p>';
+            } else {
+                let html = '<ul style="list-style: none; padding: 0;">';
+                completedJobs.forEach(job => {
+                    html += `<li style="padding: 0.7rem 0; border-bottom: 1px solid #eee;">
+                        ${job.jobTitle} - <span class="work-status status-approved">✅ Approved & Paid</span>
+                        <br><small style="color: #999;">Amount: KSh ${job.jobBudget}</small>
+                    </li>`;
+                });
+                html += '</ul>';
+                completedDiv.innerHTML = html;
+            }
+
+            const rejectedDiv = document.getElementById('rejectedJobs');
+            if (rejectedJobs.length === 0) {
+                rejectedDiv.innerHTML = '<p style="color: #666;">No rejected jobs</p>';
+            } else {
+                let html = '<ul style="list-style: none; padding: 0;">';
+                rejectedJobs.forEach(job => {
+                    html += `<li style="padding: 0.7rem 0; border-bottom: 1px solid #eee;">
+                        ${job.jobTitle} - <span class="work-status status-rejected">❌ Rejected</span>
+                        <br><small style="color: #999;">Reason: ${job.rejectionReason || 'Quality not met'}</small>
+                    </li>`;
+                });
+                html += '</ul>';
+                rejectedDiv.innerHTML = html;
+            }
+        }
+
+        function submitWork(index) {
+            const myJobs = userJobs.filter(uj => uj.userEmail === currentUser.email && uj.status === 'working');
+            const job = myJobs[index];
+
+            const workContent = document.getElementById(`workContent_${index}`).value.trim();
+            const workFile = document.getElementById(`workFile_${index}`).files[0];
+
+            if (!workContent) {
+                showAlert('Please enter your completed work!', 'error', 'alertBox');
+                return;
+            }
+
+            job.workContent = workContent;
+            job.status = 'submitted';
+            job.submittedAt = new Date().toLocaleString();
+
+            if (workFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    job.workFile = {name: workFile.name, data: e.target.result};
+                    localStorage.setItem('allUserJobs', JSON.stringify(userJobs));
+                };
+                reader.readAsDataURL(workFile);
+            } else {
+                localStorage.setItem('allUserJobs', JSON.stringify(userJobs));
+            }
+
+            workSubmissions.push({
+                jobId: job.jobId,
+                jobTitle: job.jobTitle,
+                jobBudget: job.jobBudget,
+                jobOwner: job.jobOwner,
+                jobOwnerName: job.jobOwnerName,
+                workerEmail: currentUser.email,
+                workerName: currentUser.name,
+                workContent: workContent,
+                workFile: job.workFile,
+                submittedAt: job.submittedAt,
+                status: 'pending'
+            });
+            localStorage.setItem('allWorkSubmissions', JSON.stringify(workSubmissions));
+
+            showAlert('Work submitted successfully! Awaiting client approval. ⏰', 'success', 'alertBox');
+            loadMyJobs();
+        }
+
+        function withdrawMoney() {
+            if (!currentUser) return;
+
+            const balance = currentUser.balance || 0;
+
+            if (balance < 1000) {
+                showAlert('Minimum withdrawal is KSh 1,000. Activate your account to start earning!', 'error', 'alertBox');
+                showPage('activate');
+                return;
+            }
+
+            if (confirm(`Withdraw KSh ${balance} to your M-Pesa?`)) {
+                showAlert('Withdrawal request submitted! Admin will process within 1-2 hours. 💰', 'success', 'alertBox');
+            }
+        }
+
+        function activateAccount() {
+            if (!currentUser) {
+                showAlert('Please sign in first', 'error', 'alertAuth');
+                showAuthModal();
+                return;
+            }
+
+            if (currentUser.verified) {
+                showAlert('Your account is already verified! ✓', 'success', 'alertBox');
+                return;
+            }
+
+            if (currentUser.activationPending) {
+                showAlert('Your activation request is pending approval!', 'error', 'alertBox');
+                return;
+            }
+
+            const screenshot = document.getElementById('activationPreview').src;
+            if (!screenshot || screenshot === '') {
+                showAlert('Please upload payment screenshot first!', 'error', 'alertBox');
+                return;
+            }
+
+            activationRequests.push({
+                email: currentUser.email,
+                name: currentUser.name,
+                screenshot: screenshot,
+                requestedAt: new Date().toLocaleString()
+            });
+            localStorage.setItem('allActivationRequests', JSON.stringify(activationRequests));
+
+            currentUser.activationPending = true;
+            localStorage.setItem('allUsers', JSON.stringify(users));
+            document.getElementById('activationStatus').classList.remove('hidden');
+
+            showAlert('Activation request submitted! Admin will review within 1-5 hours. ⏰', 'success', 'alertBox');
+        }
+
+        function upgradeToVIP() {
+            if (!currentUser) {
+                showAlert('Please sign in first', 'error', 'alertAuth');
+                showAuthModal();
+                return;
+            }
+
+            if (currentUser.vip) {
+                showAlert('You are already a VIP member! ⭐', 'success', 'alertBox');
+                return;
+            }
+
+            if (currentUser.vipPending) {
+                showAlert('Your VIP upgrade request is pending approval!', 'error', 'alertBox');
+                return;
+            }
+
+            const screenshot = document.getElementById('vipPreview').src;
+            if (!screenshot || screenshot === '') {
+                showAlert('Please upload payment screenshot first!', 'error', 'alertBox');
+                return;
+            }
+
+            vipRequests.push({
+                email: currentUser.email,
+                name: currentUser.name,
+                screenshot: screenshot,
+                requestedAt: new Date().toLocaleString()
+            });
+            localStorage.setItem('allVIPRequests', JSON.stringify(vipRequests));
+
+            currentUser.vipPending = true;
+            localStorage.setItem('allUsers', JSON.stringify(users));
+            document.getElementById('vipStatus').classList.remove('hidden');
+
+            showAlert('VIP upgrade request submitted! Admin will review within 1-5 hours. ⏰', 'success', 'alertBox');
+        }
+
+        function postInviteLink() {
+            const link = document.getElementById('adminInviteLink').value.trim();
+            if (!link) {
+                showAlert('Please enter an invite link!', 'error', 'alertBox');
+                return;
+            }
+
+            adminInviteLink = link;
+            localStorage.setItem('adminInviteLink', link);
+            document.getElementById('adminInviteDisplay').classList.remove('hidden');
+            document.getElementById('adminInviteLinkDisplay').textContent = link;
+            document.getElementById('adminInviteLink').value = '';
+
+            showAlert('Invite link published successfully! 📢', 'success', 'alertBox');
+        }
+
+        function copyAdminInviteLink() {
+            const link = document.getElementById('adminInviteLinkDisplay').textContent;
+            if (link === 'No invite link posted yet') {
+                showAlert('No invite link available!', 'error', 'alertBox');
+                return;
+            }
+            navigator.clipboard.writeText(link).then(() => {
+                showAlert('Invite link copied! 📋', 'success', 'alertBox');
+            });
+        }
+
+        function copyReferLink() {
+            const link = document.getElementById('referLink').textContent;
+            navigator.clipboard.writeText(link).then(() => {
+                showAlert('Referral link copied! 📋', 'success', 'alertBox');
+            });
+        }
+
+        function withdrawMoney() {
+            if (!currentUser) return;
+
+            const balance = currentUser.balance || 0;
+
+            if (balance < 1000) {
+                showAlert('Minimum withdrawal is KSh 1,000. Activate your account to start earning!', 'error', 'alertBox');
+                showPage('activate');
+                return;
+            }
+
+            if (confirm(`Withdraw KSh ${balance} to your M-Pesa?`)) {
+                showAlert('Withdrawal request submitted! Admin will process within 1-2 hours. 💰', 'success', 'alertBox');
+            }
+        }
+
+        function loadAdminDashboard() {
+            const walletsDiv = document.getElementById('adminWallets');
+            walletsDiv.innerHTML = '';
+            const regularUsers = users.filter(u => !u.isAdmin);
+            if (regularUsers.length === 0) {
+                walletsDiv.innerHTML = '<p style="color: rgba(255,255,255,0.7);">No users yet</p>';
+            } else {
+                regularUsers.forEach(user => {
+                    const card = document.createElement('div');
+                    card.className = 'admin-card';
+                    card.innerHTML = `
+                        <strong>${user.name}</strong> (${user.email})
+                        <br><small>Balance: KSh ${user.balance || 0}</small>
+                        <br><small>Status: ${user.verified ? '✓ Verified' : '❌ Not Verified'} | ${user.vip ? '⭐ VIP' : 'Regular'}</small>
+                    `;
+                    walletsDiv.appendChild(card);
+                });
+            }
+
+            const activationList = document.getElementById('activationRequests');
+            activationList.innerHTML = '';
+            if (activationRequests.length === 0) {
+                activationList.innerHTML = '<p style="color: rgba(255,255,255,0.7);">No activation requests</p>';
+            } else {
+                activationRequests.forEach((req, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'admin-card';
+                    card.innerHTML = `
+                        <strong>${req.name}</strong> (${req.email})
+                        <br><small>Requested: ${req.requestedAt}</small>
+                        <br><img src="${req.screenshot}" style="max-width: 100%; max-height: 200px; margin: 1rem 0; border-radius: 8px;">
+                        <br><button class="btn btn-success" onclick="approveActivation(${index})" style="padding: 0.5rem 1rem; margin-right: 0.5rem;">✓ Approve</button>
+                        <button class="btn btn-danger" onclick="rejectActivation(${index})" style="padding: 0.5rem 1rem;">✗ Reject</button>
+                    `;
+                    activationList.appendChild(card);
+                });
+            }
+
+            const vipList = document.getElementById('vipRequests');
+            vipList.innerHTML = '';
+            if (vipRequests.length === 0) {
+                vipList.innerHTML = '<p style="color: rgba(255,255,255,0.7);">No VIP requests</p>';
+            } else {
+                vipRequests.forEach((req, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'admin-card';
+                    card.innerHTML = `
+                        <strong>${req.name}</strong> (${req.email})
+                        <br><small>Requested: ${req.requestedAt}</small>
+                        <br><img src="${req.screenshot}" style="max-width: 100%; max-height: 200px; margin: 1rem 0; border-radius: 8px;">
+                        <br><button class="btn btn-success" onclick="approveVIP(${index})" style="padding: 0.5rem 1rem; margin-right: 0.5rem;">✓ Approve</button>
+                        <button class="btn btn-danger" onclick="rejectVIP(${index})" style="padding: 0.5rem 1rem;">✗ Reject</button>
+                    `;
+                    vipList.appendChild(card);
+                });
+            }
+
+            const adminJobsList = document.getElementById('adminJobsList');
+            adminJobsList.innerHTML = '';
+            if (jobs.length === 0) {
+                adminJobsList.innerHTML = '<p style="color: rgba(255,255,255,0.7);">No jobs posted</p>';
+            } else {
+                jobs.forEach((job, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'admin-card';
+                    card.innerHTML = `
+                        <strong>${job.title}</strong>
+                        <br><small>Budget: KSh ${job.budget}</small>
+                        <br><small>Posted by: ${job.postedByName} (${job.postedBy})</small>
+                        <br><small>Posted at: ${job.postedAt || 'N/A'}</small>
+                        <br><p style="margin-top: 0.5rem; color: rgba(255,255,255,0.8);">${job.description}</p>
+                        <button class="btn btn-danger" onclick="deleteJob(${index})" style="padding: 0.5rem 1rem; margin-top: 0.5rem;">🗑️ Delete</button>
+                    `;
+                    adminJobsList.appendChild(card);
+                });
+            }
+
+            const workSubDiv = document.getElementById('adminWorkSubmissions');
+            workSubDiv.innerHTML = '';
+            if (workSubmissions.length === 0) {
+                workSubDiv.innerHTML = '<p style="color: rgba(255,255,255,0.7);">No work submissions</p>';
+            } else {
+                workSubmissions.forEach((sub, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'admin-card';
+                    card.innerHTML = `
+                        <strong>${sub.jobTitle}</strong>
+                        <br><small>Worker: ${sub.workerName} (${sub.workerEmail})</small>
+                        <br><small>Client: ${sub.jobOwnerName} (${sub.jobOwner})</small>
+                        <br><small>Budget: KSh ${sub.jobBudget}</small>
+                        <br><small>Submitted: ${sub.submittedAt}</small>
+                        <div style="margin: 1rem 0; padding: 1rem; background: rgba(255,255,255,0.1); border-radius: 8px;">
+                            <strong>Work Content:</strong>
+                            <p style="margin-top: 0.5rem; white-space: pre-wrap;">${sub.workContent}</p>
+                            ${sub.workFile ? `<br><small>📎 File: ${sub.workFile.name}</small>` : ''}
+                        </div>
+                        <button class="btn btn-success" onclick="approveWork(${index})" style="padding: 0.5rem 1rem; margin-right: 0.5rem;">✓ Approve & Pay</button>
+                        <button class="btn btn-danger" onclick="rejectWork(${index})" style="padding: 0.5rem 1rem;">✗ Reject</button>
+                    `;
+                    workSubDiv.appendChild(card);
+                });
+            }
+        }
+
+        function approveActivation(index) {
+            const req = activationRequests[index];
+            const user = users.find(u => u.email === req.email);
+            
+            if (user) {
+                user.verified = true;
+                user.balance = (user.balance || 0) + 500;
+                user.activationPending = false;
+                
+                if (user === currentUser) {
+                    document.getElementById('verifiedBadge').classList.remove('hidden');
+                    document.getElementById('walletBalance').textContent = `KSh ${user.balance}`;
+                }
+            }
+            
+            activationRequests.splice(index, 1);
+            showAlert('Activation approved! ✓', 'success', 'alertBox');
+            loadAdminDashboard();
+        }
+
+        function rejectActivation(index) {
+            const req = activationRequests[index];
+            const user = users.find(u => u.email === req.email);
+            if (user) user.activationPending = false;
+            
+            activationRequests.splice(index, 1);
+            showAlert('Activation rejected', 'error', 'alertBox');
+            loadAdminDashboard();
+        }
+
+        function approveVIP(index) {
+            const req = vipRequests[index];
+            const user = users.find(u => u.email === req.email);
+            
+            if (user) {
+                user.vip = true;
+                user.balance = (user.balance || 0) + 1000;
+                user.vipPending = false;
+                
+                if (user === currentUser) {
+                    document.getElementById('walletBalance').textContent = `KSh ${user.balance}`;
+                }
+            }
+            
+            vipRequests.splice(index, 1);
+            showAlert('VIP upgrade approved! ⭐', 'success', 'alertBox');
+            loadAdminDashboard();
+        }
+
+        function rejectVIP(index) {
+            const req = vipRequests[index];
+            const user = users.find(u => u.email === req.email);
+            if (user) user.vipPending = false;
+            
+            vipRequests.splice(index, 1);
+            showAlert('VIP upgrade rejected', 'error', 'alertBox');
+            loadAdminDashboard();
+        }
+
+        function deleteJob(index) {
+            if (confirm('Delete this job?')) {
+                jobs.splice(index, 1);
+                showAlert('Job deleted!', 'success', 'alertBox');
+                loadAdminDashboard();
+            }
+        }
+
+        function approveWork(index) {
+            const submission = workSubmissions[index];
+            const worker = users.find(u => u.email === submission.workerEmail);
+            const userJob = userJobs.find(uj => uj.jobId === submission.jobId && uj.userEmail === submission.workerEmail);
+            
+            if (worker) {
+                worker.balance = (worker.balance || 0) + parseInt(submission.jobBudget);
+                if (worker === currentUser) {
+                    document.getElementById('walletBalance').textContent = `KSh ${worker.balance}`;
+                }
+            }
+            
+            if (userJob) {
+                userJob.status = 'approved';
+            }
+            
+            workSubmissions.splice(index, 1);
+            showAlert('Work approved and payment credited! ✅', 'success', 'alertBox');
+            loadAdminDashboard();
+            if (currentUser && !currentUser.isAdmin) loadMyJobs();
+        }
+
+        function rejectWork(index) {
+            const reason = prompt('Enter rejection reason:');
+            if (!reason) return;
+            
+            const submission = workSubmissions[index];
+            const userJob = userJobs.find(uj => uj.jobId === submission.jobId && uj.userEmail === submission.workerEmail);
+            
+            if (userJob) {
+                userJob.status = 'rejected';
+                userJob.rejectionReason = reason;
+            }
+            
+            workSubmissions.splice(index, 1);
+            showAlert('Work rejected', 'error', 'alertBox');
+            loadAdminDashboard();
+            if (currentUser && !currentUser.isAdmin) loadMyJobs();
+        }
+
+        window.onload = function() {
+            const savedEmail = localStorage.getItem('currentUserEmail');
+            if (savedEmail) {
+                const user = users.find(u => u.email === savedEmail);
+                if (user) {
+                    currentUser = user;
+                    updateUserInterface();
+                }
+            }
+        };
+    </script>
+</body>
+</html>
