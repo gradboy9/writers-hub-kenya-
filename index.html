@@ -1,0 +1,2058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Writers Hub Kenya</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2ecc71;
+            --primary-dark: #27ae60;
+            --secondary: #3498db;
+            --dark: #2c3e50;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --success: #27ae60;
+            --light: #ecf0f1;
+            --gradient: linear-gradient(135deg, #0d0dc1 0%, #ef0b16 100%);
+            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0707d6 0%, #d30606 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            background: rgba(5, 231, 20, 0.98);
+            backdrop-filter: blur(20px);
+            padding: 1.2rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .hamburger {
+            width: 32px;
+            height: 28px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 1001;
+        }
+
+        .hamburger span {
+            width: 100%;
+            height: 4px;
+            background: var(--gradient);
+            border-radius: 4px;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(9px, 9px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(9px, -9px);
+        }
+
+        .sidebar {
+            position: fixed;
+            right: -420px;
+            top: 0;
+            width: 380px;
+            height: 100vh;
+            background: white;
+            box-shadow: -10px 0 40px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 999;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+
+        .sidebar.active {
+            right: 0;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 998;
+            backdrop-filter: blur(5px);
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .profile-section {
+            text-align: center;
+            padding: 2rem 0;
+            border-bottom: 3px solid var(--light);
+            margin-bottom: 1.5rem;
+            background: var(--gradient);
+            border-radius: 20px;
+            margin: -2rem -2rem 1.5rem -2rem;
+            padding: 3rem 2rem 2rem 2rem;
+        }
+
+        .profile-photo {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--primary);
+            margin: 0 auto 1rem;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-photo:hover {
+            transform: scale(1.08) rotate(5deg);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .profile-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-name {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 0.3rem;
+        }
+
+        .profile-email {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.95rem;
+        }
+
+        .verified-badge {
+            display: inline-block;
+            background: white;
+            color: var(--success);
+            padding: 0.3rem 1rem;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            margin-top: 0.8rem;
+            font-weight: bold;
+        }
+
+        .wallet-section {
+            background: var(--gradient-2);
+            padding: 2rem;
+            border-radius: 20px;
+            color: white;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .wallet-balance {
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin-bottom: 0.8rem;
+        }
+
+        .menu-links {
+            list-style: none;
+        }
+
+        .menu-links li {
+            margin-bottom: 0.3rem;
+        }
+
+        .menu-links a, .menu-links button {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.1rem 1.2rem;
+            color: var(--dark);
+            text-decoration: none;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            background: transparent;
+            border: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            font-size: 1.05rem;
+            font-weight: 500;
+        }
+
+        .menu-links a:hover, .menu-links button:hover {
+            background: var(--gradient);
+            color: white;
+            transform: translateX(8px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.6s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero {
+            background: white;
+            border-radius: 30px;
+            padding: 5rem 3rem;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .office-workspace {
+            max-width: 900px;
+            margin: 0 auto 3rem;
+        }
+
+        .office-workspace img {
+            width: 100%;
+            max-width: 900px;
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+            font-weight: 900;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: var(--secondary);
+            margin-bottom: 2.5rem;
+            line-height: 1.8;
+        }
+
+        .btn {
+            background: var(--gradient);
+            color: white;
+            padding: 1.2rem 3.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.15rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 3px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .jobs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .job-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            border: 2px solid transparent;
+        }
+
+        .job-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .job-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--dark);
+            margin-bottom: 0.8rem;
+        }
+
+        .job-category {
+            display: inline-block;
+            background: var(--gradient);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .job-budget {
+            font-size: 1.8rem;
+            color: var(--success);
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .job-description {
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 30px;
+            padding: 3rem;
+            max-width: 650px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 1.2rem;
+            background: var(--light);
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+
+        .tab-btn.active {
+            background: var(--gradient);
+            color: white;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--light);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.1);
+        }
+
+        .alert {
+            position: fixed;
+            top: 100px;
+            right: 2rem;
+            padding: 1.2rem 2rem;
+            border-radius: 15px;
+            color: white;
+            z-index: 3000;
+            animation: slideIn 0.3s ease;
+            box-shadow: var(--shadow-lg);
+            font-weight: 600;
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .alert-error {
+            background: var(--danger);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .admin-card {
+            background: white;
+            border-radius: 25px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 2rem;
+        }
+
+        .user-card {
+            background: var(--light);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .user-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            background: var(--warning);
+            color: white;
+        }
+
+        .status-approved {
+            background: var(--success);
+            color: white;
+        }
+
+        .status-rejected {
+            background: var(--danger);
+            color: white;
+        }
+
+        .screenshot-preview {
+            max-width: 100%;
+            max-height: 350px;
+            margin-top: 1rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .admin-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .chat-message {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 15px;
+        }
+
+        .chat-message.sent {
+            background: var(--gradient);
+            color: white;
+            margin-left: 20%;
+        }
+
+        .chat-message.received {
+            background: var(--light);
+            color: var(--dark);
+            margin-right: 20%;
+        }
+
+        .footer {
+            background: rgba(255, 255, 255, 0.98);
+            padding: 3rem;
+            text-align: center;
+            color: var(--dark);
+            border-radius: 30px;
+            margin-top: 4rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: white;
+            border-radius: 30px;
+            padding: 3rem;
+            box-shadow: var(--shadow-lg);
+            z-index: 3000;
+            text-align: center;
+            max-width: 550px;
+            width: 90%;
+            transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .popup.active {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .popup-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                right: -100%;
+            }
+
+            .jobs-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .navbar {
+                padding: 1rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">✍️ Writers Hub Kenya</div>
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <div class="overlay" id="overlay"></div>
+
+    <div class="sidebar" id="sidebar">
+        <div class="profile-section">
+            <div class="profile-photo" id="profilePhoto" onclick="uploadPhoto()">
+                <span id="profileInitial">?</span>
+            </div>
+            <input type="file" id="photoInput" accept="image/*" style="display:none">
+            <div class="profile-name" id="profileName">Guest User</div>
+            <div class="profile-email" id="profileEmail">Please sign in</div>
+            <div id="verifiedBadge"></div>
+        </div>
+
+        <div class="wallet-section" id="walletSection" style="display:none">
+            <div>💰 Wallet Balance</div>
+            <div class="wallet-balance">KSh <span id="walletBalance">0</span></div>
+            <button class="btn btn-secondary" onclick="requestWithdrawal()">Withdraw Funds</button>
+        </div>
+
+        <ul class="menu-links">
+            <li><a href="#" onclick="showPage('home')">🏠 Home</a></li>
+            <li><a href="#" onclick="showPage('jobs')">💼 Browse Jobs</a></li>
+            <li><a href="#" onclick="showPage('about')">ℹ️ About Us</a></li>
+            <li><a href="#" onclick="showPage('contact')">📞 Contact</a></li>
+            <li id="myJobsLink" style="display:none"><a href="#" onclick="showPage('myjobs')">📋 My Jobs</a></li>
+            <li id="settingsLink" style="display:none"><a href="#" onclick="showPage('settings')">⚙️ Settings</a></li>
+            <li id="activateLink" style="display:none"><a href="#" onclick="showPage('activate')">✓ Activate Account</a></li>
+            <li id="adminLink" style="display:none"><a href="#" onclick="showPage('admin')">👑 Admin Dashboard</a></li>
+            <li id="logoutLink" style="display:none"><button onclick="logout()">🚪 Logout</button></li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <div id="home" class="page active">
+            <div class="hero">
+                <div class="hero-content">
+                    <div class="office-workspace">
+                        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=900&h=500&fit=crop" 
+                             alt="Professional workspace">
+                    </div>
+                    <h1>Writers Hub Kenya</h1>
+                    <p>Your Gateway to Professional Freelance Opportunities in Kenya</p>
+                    <button class="btn" onclick="openAuthModal()">Join Our Community Today</button>
+                </div>
+            </div>
+
+            <div class="footer">
+                <h3 style="margin-bottom: 1rem; color: var(--primary);">Empowering Kenyan Creatives</h3>
+                <p>Connect with clients, showcase your skills, and grow your career</p>
+                <p style="margin-top: 1rem;">© 2025 Writers Hub Kenya | https://writershubkenya.co.ke</p>
+            </div>
+        </div>
+
+        <div id="jobs" class="page">
+            <h1 style="color: white; text-align: center; margin-bottom: 3rem; font-size: 2.5rem;">Available Opportunities</h1>
+            <div class="jobs-grid" id="jobsList"></div>
+        </div>
+
+        <div id="about" class="page">
+            <div class="admin-card">
+                <h1 style="color: var(--primary); margin-bottom: 2rem;">About Writers Hub Kenya</h1>
+                <p style="font-size: 1.2rem; line-height: 2; color: var(--secondary); margin-bottom: 2rem;">
+                    Writers Hub Kenya is a premier platform connecting talented Kenyan freelancers with exciting opportunities. 
+                    Whether you're a writer, designer, or creative professional, we provide a secure environment to showcase 
+                    your skills and earn competitive rates.
+                </p>
+                <h2 style="color: var(--primary); margin: 3rem 0 2rem;">How It Works</h2>
+                <div class="job-card">
+                    <div class="job-title">1️⃣ Create Your Account</div>
+                    <p>Sign up and build your professional profile in minutes</p>
+                </div>
+                <div class="job-card">
+                    <div class="job-title">2️⃣ Activate Your Profile</div>
+                    <p>Complete account verification to access all opportunities</p>
+                </div>
+                <div class="job-card">
+                    <div class="job-title">3️⃣ Browse & Apply</div>
+                    <p>Explore diverse projects matching your expertise</p>
+                </div>
+                <div class="job-card">
+                    <div class="job-title">4️⃣ Deliver Quality Work</div>
+                    <p>Complete projects and communicate with clients</p>
+                </div>
+                <div class="job-card">
+                    <div class="job-title">5️⃣ Get Paid Securely</div>
+                    <p>Receive payments directly to your wallet</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="contact" class="page">
+            <div class="admin-card" style="text-align: center;">
+                <h1 style="color: var(--primary); margin-bottom: 3rem;">Get In Touch</h1>
+                <div style="background: #25D366; color: white; padding: 4rem; border-radius: 25px; margin: 2rem 0;">
+                    <div style="font-size: 5rem; margin-bottom: 1.5rem;">💬</div>
+                    <h2 style="margin-bottom: 1rem;">Need Assistance?</h2>
+                    <p style="font-size: 1.3rem; margin-bottom: 2rem;">Chat with us on WhatsApp for instant support</p>
+                    <a href="https://wa.me/254792899405" target="_blank" style="text-decoration: none;">
+                        <button class="btn" style="background: white; color: #25D366; font-size: 1.3rem;">
+                            WhatsApp: +254 792 899405
+                        </button>
+                    </a>
+                </div>
+                <p style="margin-top: 2rem; font-size: 1.1rem;">Email: support@writershubkenya.co.ke</p>
+                <p style="font-size: 1.1rem;">Website: https://writershubkenya.co.ke</p>
+            </div>
+        </div>
+
+        <div id="myjobs" class="page">
+            <h1 style="color: white; margin-bottom: 2rem; text-align: center;">My Jobs Dashboard</h1>
+            <div class="admin-tabs">
+                <button class="tab-btn active" onclick="showJobTab('applied')">📤 Applied</button>
+                <button class="tab-btn" onclick="showJobTab('completed')">✅ Completed</button>
+                <button class="tab-btn" onclick="showJobTab('pending')">⏳ Pending Review</button>
+                <button class="tab-btn" onclick="showJobTab('rejected')">❌ Rejected</button>
+            </div>
+            <div id="appliedJobs" class="admin-card"></div>
+            <div id="completedJobs" class="admin-card" style="display:none"></div>
+            <div id="pendingJobs" class="admin-card" style="display:none"></div>
+            <div id="rejectedJobs" class="admin-card" style="display:none"></div>
+        </div>
+
+        <div id="settings" class="page">
+            <div class="admin-card">
+                <h1 style="color: var(--primary); margin-bottom: 2rem;">Account Settings</h1>
+                
+                <div style="background: var(--light); padding: 2rem; border-radius: 20px; margin-bottom: 2rem;">
+                    <h2 style="color: var(--primary); margin-bottom: 1.5rem;">Change Password</h2>
+                    <div class="form-group">
+                        <label>Current Password</label>
+                        <input type="password" id="currentPassword" placeholder="Enter current password">
+                    </div>
+                    <div class="form-group">
+                        <label>New Password</label>
+                        <input type="password" id="newPassword" placeholder="Enter new password">
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm New Password</label>
+                        <input type="password" id="confirmPassword" placeholder="Confirm new password">
+                    </div>
+                    <button class="btn" onclick="changePassword()">Update Password</button>
+                </div>
+
+                <div style="background: var(--light); padding: 2rem; border-radius: 20px;">
+                    <h2 style="color: var(--primary); margin-bottom: 1.5rem;">Account Information</h2>
+                    <p style="margin: 0.8rem 0;"><strong>Name:</strong> <span id="settingsName"></span></p>
+                    <p style="margin: 0.8rem 0;"><strong>Email:</strong> <span id="settingsEmail"></span></p>
+                    <p style="margin: 0.8rem 0;"><strong>Status:</strong> <span id="settingsStatus"></span></p>
+                    <p style="margin: 0.8rem 0;"><strong>Member Since:</strong> <span id="settingsMemberSince"></span></p>
+                </div>
+            </div>
+        </div>
+
+        <div id="activate" class="page">
+            <div class="admin-card">
+                <h1 style="color: var(--primary); margin-bottom: 2rem;">Activate Your Account</h1>
+                <div style="background: var(--gradient); color: white; padding: 3rem; border-radius: 25px; margin: 2rem 0;">
+                    <h2 style="margin-bottom: 1.5rem;">Unlock Full Access ✓</h2>
+                    <ul style="margin: 2rem 0; line-height: 2.5; font-size: 1.1rem;">
+                        <li>✅ Apply to all job opportunities</li>
+                        <li>🌍 Connect with clients nationwide</li>
+                        <li>📌 Priority in job applications</li>
+                        <li>💰 Higher earning potential</li>
+                        <li>🎯 Professional verification badge</li>
+                    </ul>
+                    <div style="background: white; color: var(--dark); padding: 2rem; border-radius: 20px; margin: 1.5rem 0;">
+                        <h3 style="color: var(--primary);">Activation Fee: KSh 300</h3>
+                        <p style="margin: 1rem 0;"><strong>Pay to:</strong> Pochi La Biashara</p>
+                        <p><strong>Number:</strong> <span id="activationNumber">0792899405</span> 
+                            <button onclick="copyPhoneNumber('activationNumber')" style="background: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 10px; cursor: pointer; margin-left: 1rem;">📋 Copy</button>
+                        </p>
+                    </div>
+                    <div class="form-group">
+                        <label style="color: white;">Upload M-Pesa Payment Screenshot</label>
+                        <input type="file" id="activationScreenshot" accept="image/*" onchange="previewScreenshot('activation')">
+                    </div>
+                    <img id="activationPreview" class="screenshot-preview" style="display:none">
+                    <button class="btn" style="background: white; color: var(--primary);" onclick="activateAccount()">Submit Activation Request</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="admin" class="page">
+            <h1 style="color: white; margin-bottom: 2rem; text-align: center;">👑 Admin Dashboard</h1>
+            <div class="admin-tabs">
+                <button class="tab-btn active" onclick="showAdminTab('users')">👥 All Users</button>
+                <button class="tab-btn" onclick="showAdminTab('activations')">✓ Activations</button>
+                <button class="tab-btn" onclick="showAdminTab('submissions')">📄 Job Submissions</button>
+                <button class="tab-btn" onclick="showAdminTab('withdrawals')">💰 Withdrawals</button>
+                <button class="tab-btn" onclick="showAdminTab('messages')">💬 Messages</button>
+            </div>
+
+            <div id="adminUsers" class="admin-card">
+                <h2 style="color: var(--primary); margin-bottom: 2rem;">Registered Users</h2>
+                <div id="usersList"></div>
+            </div>
+
+            <div id="adminActivations" class="admin-card" style="display:none">
+                <h2 style="color: var(--primary); margin-bottom: 2rem;">Activation Requests</h2>
+                <div id="activationsList"></div>
+            </div>
+
+            <div id="adminSubmissions" class="admin-card" style="display:none">
+                <h2 style="color: var(--primary); margin-bottom: 2rem;">Job Submissions</h2>
+                <div id="submissionsList"></div>
+            </div>
+
+            <div id="adminWithdrawals" class="admin-card" style="display:none">
+                <h2 style="color: var(--primary); margin-bottom: 2rem;">Withdrawal Requests</h2>
+                <div id="withdrawalsList"></div>
+            </div>
+
+            <div id="adminMessages" class="admin-card" style="display:none">
+                <h2 style="color: var(--primary); margin-bottom: 2rem;">User Messages</h2>
+                <div id="messagesList"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <h2 style="color: var(--primary); margin-bottom: 2rem; text-align: center;">Welcome to Writers Hub Kenya</h2>
+            <div class="modal-tabs">
+                <button class="tab-btn active" onclick="switchAuthTab('signup')">Sign Up</button>
+                <button class="tab-btn" onclick="switchAuthTab('signin')">Sign In</button>
+            </div>
+
+            <div id="signupTab" class="tab-content active">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="signupName" placeholder="Enter your full name">
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="signupEmail" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="signupPassword" placeholder="Create a strong password">
+                </div>
+                <button class="btn" onclick="signUp()" style="width: 100%;">Create Account</button>
+            </div>
+
+            <div id="signinTab" class="tab-content">
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="signinEmail" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="signinPassword" placeholder="Enter your password">
+                </div>
+                <button class="btn" onclick="signIn()" style="width: 100%;">Sign In</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="submitJobModal">
+        <div class="modal-content">
+            <h2 style="color: var(--primary); margin-bottom: 2rem; text-align: center;">Submit Your Work</h2>
+            <div class="form-group">
+                <label>Job Title</label>
+                <input type="text" id="submissionJobTitle" readonly style="background: #f0f0f0;">
+            </div>
+            <div class="form-group">
+                <label>Your Work / Document Link</label>
+                <textarea id="submissionContent" rows="6" placeholder="Paste your Google Docs link or describe your completed work..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Upload Work File (Optional)</label>
+                <input type="file" id="submissionFile">
+            </div>
+            <div class="form-group">
+                <label>Message</label>
+                <textarea id="submissionMessage" rows="3" placeholder="Add a message (optional)..."></textarea>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <button class="btn" onclick="submitWork()" style="flex: 1;">Submit Work</button>
+                <button class="btn btn-secondary" onclick="closeSubmitModal()" style="flex: 1;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="chatModal">
+        <div class="modal-content">
+            <h2 style="color: var(--primary); margin-bottom: 1.5rem; text-align: center;">💬 Communication</h2>
+            <div id="chatHeader" style="background: var(--light); padding: 1.5rem; border-radius: 15px; margin-bottom: 1.5rem;"></div>
+            <div id="chatMessages" style="background: #f8f9fa; padding: 1.5rem; border-radius: 15px; max-height: 400px; overflow-y: auto; margin-bottom: 1.5rem;"></div>
+            <div style="display: flex; gap: 0.5rem;">
+                <input type="text" id="chatInput" placeholder="Type your message..." style="flex: 1; padding: 1rem; border: 2px solid var(--light); border-radius: 15px;">
+                <button class="btn" onclick="sendMessage()">Send</button>
+            </div>
+            <button class="btn btn-secondary" onclick="closeChatModal()" style="width: 100%; margin-top: 1rem;">Close</button>
+        </div>
+    </div>
+
+    <div class="popup" id="popup">
+        <div class="popup-icon">⚠️</div>
+        <h2 id="popupTitle">Notice</h2>
+        <p id="popupMessage"></p>
+        <button class="btn" onclick="closePopup()" id="popupBtn">Okay</button>
+    </div>
+
+    <script>
+        let users = [];
+        let jobs = [];
+        let currentUser = null;
+        let activationRequests = [];
+        let jobSubmissions = [];
+        let withdrawalRequests = [];
+        let userMessages = [];
+        let currentSubmissionJobId = null;
+        let chatMessages = {};
+        let currentChatSubmissionId = null;
+
+        const hamburger = document.getElementById('hamburger');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        function showPage(pageName) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById(pageName).classList.add('active');
+            hamburger.classList.remove('active');
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+
+            if (pageName === 'jobs') loadJobs();
+            if (pageName === 'myjobs') loadMyJobs();
+            if (pageName === 'admin') loadAdminData();
+            if (pageName === 'settings') loadSettingsPage();
+        }
+
+        function showAlert(message, type = 'success') {
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            document.body.appendChild(alert);
+            setTimeout(() => alert.remove(), 4000);
+        }
+
+        function showPopup(title, message, buttonText, action) {
+            document.getElementById('popupTitle').textContent = title;
+            document.getElementById('popupMessage').textContent = message;
+            document.getElementById('popupBtn').textContent = buttonText;
+            document.getElementById('popupBtn').onclick = action;
+            document.getElementById('popup').classList.add('active');
+            document.getElementById('overlay').classList.add('active');
+        }
+
+        function closePopup() {
+            document.getElementById('popup').classList.remove('active');
+            if (!document.getElementById('authModal').classList.contains('active') && 
+                !document.getElementById('submitJobModal').classList.contains('active') &&
+                !document.getElementById('chatModal').classList.contains('active')) {
+                document.getElementById('overlay').classList.remove('active');
+            }
+        }
+
+        function openAuthModal() {
+            if (currentUser) {
+                showAlert('You are already logged in!', 'error');
+                return;
+            }
+            document.getElementById('authModal').classList.add('active');
+            overlay.classList.add('active');
+        }
+
+        function switchAuthTab(tab) {
+            document.querySelectorAll('.modal-tabs .tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            if (tab === 'signup') {
+                document.querySelector('.modal-tabs .tab-btn:first-child').classList.add('active');
+                document.getElementById('signupTab').classList.add('active');
+            } else {
+                document.querySelector('.modal-tabs .tab-btn:last-child').classList.add('active');
+                document.getElementById('signinTab').classList.add('active');
+            }
+        }
+
+        function signUp() {
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+
+            if (!name || !email || !password) {
+                showAlert('Please fill all fields', 'error');
+                return;
+            }
+
+            if (users.find(u => u.email === email)) {
+                showAlert('Email already registered!', 'error');
+                return;
+            }
+
+            const newUser = {
+                id: Date.now(),
+                name,
+                email,
+                password,
+                balance: 0,
+                verified: false,
+                photo: '',
+                appliedJobs: [],
+                completedJobs: [],
+                pendingJobs: [],
+                rejectedJobs: [],
+                joinDate: new Date().toLocaleDateString()
+            };
+
+            users.push(newUser);
+            saveData();
+            
+            showAlert('Account created successfully!');
+            document.getElementById('signupName').value = '';
+            document.getElementById('signupEmail').value = '';
+            document.getElementById('signupPassword').value = '';
+            document.getElementById('signinEmail').value = email;
+            switchAuthTab('signin');
+        }
+
+        function signIn() {
+            const email = document.getElementById('signinEmail').value;
+            const password = document.getElementById('signinPassword').value;
+
+            if (!email || !password) {
+                showAlert('Please fill all fields', 'error');
+                return;
+            }
+
+            const user = users.find(u => u.email === email);
+            
+            if (!user) {
+                showAlert('Email not found. Please sign up!', 'error');
+                return;
+            }
+
+            if (user.password !== password) {
+                showAlert('Incorrect password!', 'error');
+                return;
+            }
+
+            currentUser = user;
+            saveData();
+            
+            document.getElementById('authModal').classList.remove('active');
+            overlay.classList.remove('active');
+            showAlert(`Welcome back, ${user.name}!`);
+            updateProfile();
+        }
+
+        function updateProfile() {
+            if (currentUser) {
+                document.getElementById('profileName').textContent = currentUser.name;
+                document.getElementById('profileEmail').textContent = currentUser.email;
+                document.getElementById('walletBalance').textContent = currentUser.balance;
+                document.getElementById('walletSection').style.display = 'block';
+                document.getElementById('myJobsLink').style.display = 'block';
+                document.getElementById('settingsLink').style.display = 'block';
+                document.getElementById('activateLink').style.display = 'block';
+                document.getElementById('logoutLink').style.display = 'block';
+
+                if (currentUser.photo) {
+                    document.getElementById('profilePhoto').innerHTML = `<img src="${currentUser.photo}" alt="Profile">`;
+                } else {
+                    document.getElementById('profileInitial').textContent = currentUser.name.charAt(0).toUpperCase();
+                }
+
+                if (currentUser.verified) {
+                    document.getElementById('verifiedBadge').innerHTML = '<div class="verified-badge">✓ Verified Member</div>';
+                }
+
+                if (currentUser.email === 'michaeljohn254h@gmail.com') {
+                    document.getElementById('adminLink').style.display = 'block';
+                }
+
+                if (document.getElementById('settings').classList.contains('active')) {
+                    loadSettingsPage();
+                }
+            }
+        }
+
+        function uploadPhoto() {
+            if (!currentUser) {
+                showAlert('Please sign in first', 'error');
+                return;
+            }
+            document.getElementById('photoInput').click();
+        }
+
+        document.getElementById('photoInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentUser.photo = e.target.result;
+                    updateUserData();
+                    document.getElementById('profilePhoto').innerHTML = `<img src="${e.target.result}" alt="Profile">`;
+                    showAlert('Photo updated successfully!');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function loadSettingsPage() {
+            if (!currentUser) return;
+            document.getElementById('settingsName').textContent = currentUser.name;
+            document.getElementById('settingsEmail').textContent = currentUser.email;
+            
+            let status = 'Regular Member';
+            if (currentUser.verified) status = '✓ Verified Member';
+            document.getElementById('settingsStatus').textContent = status;
+            
+            document.getElementById('settingsMemberSince').textContent = currentUser.joinDate || new Date(currentUser.id).toLocaleDateString();
+        }
+
+        function changePassword() {
+            if (!currentUser) return;
+
+            const currentPass = document.getElementById('currentPassword').value;
+            const newPass = document.getElementById('newPassword').value;
+            const confirmPass = document.getElementById('confirmPassword').value;
+
+            if (!currentPass || !newPass || !confirmPass) {
+                showAlert('Please fill all fields', 'error');
+                return;
+            }
+
+            if (currentUser.password !== currentPass) {
+                showAlert('Current password is incorrect', 'error');
+                return;
+            }
+
+            if (newPass.length < 6) {
+                showAlert('New password must be at least 6 characters', 'error');
+                return;
+            }
+
+            if (newPass !== confirmPass) {
+                showAlert('New passwords do not match', 'error');
+                return;
+            }
+
+            currentUser.password = newPass;
+            updateUserData();
+            
+            document.getElementById('currentPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+            
+            showPopup(
+                '✅ Password Updated',
+                'Your password has been changed successfully!',
+                'Okay',
+                closePopup
+            );
+        }
+
+        function requestWithdrawal() {
+            if (!currentUser) return;
+
+            if (currentUser.balance < 1000) {
+                showPopup(
+                    '💰 Minimum Withdrawal',
+                    'Minimum withdrawal amount is KSh 1,000. Keep working to reach the minimum!',
+                    'Okay',
+                    closePopup
+                );
+                return;
+            }
+
+            if (!currentUser.verified) {
+                showPopup(
+                    '⚠️ Account Not Activated',
+                    'You need to activate your account before withdrawing funds.',
+                    'Activate Now',
+                    () => {
+                        closePopup();
+                        showPage('activate');
+                    }
+                );
+                return;
+            }
+
+            const amount = prompt('Enter amount to withdraw (Min: KSh 1000):');
+            if (!amount) return;
+
+            const withdrawAmount = parseInt(amount);
+            if (withdrawAmount < 1000) {
+                showAlert('Minimum withdrawal is KSh 1000', 'error');
+                return;
+            }
+
+            if (withdrawAmount > currentUser.balance) {
+                showAlert('Insufficient balance', 'error');
+                return;
+            }
+
+            const withdrawal = {
+                id: Date.now(),
+                userId: currentUser.id,
+                userName: currentUser.name,
+                userEmail: currentUser.email,
+                amount: withdrawAmount,
+                status: 'pending',
+                date: new Date().toLocaleDateString(),
+                time: new Date().toLocaleTimeString()
+            };
+
+            withdrawalRequests.push(withdrawal);
+            saveData();
+
+            showPopup(
+                '✅ Withdrawal Requested',
+                'Your withdrawal request has been submitted. The admin will process it within 24 hours.',
+                'Okay',
+                closePopup
+            );
+        }
+
+        function loadJobs() {
+            const jobsList = document.getElementById('jobsList');
+            jobsList.innerHTML = '';
+
+            if (jobs.length === 0) {
+                jobsList.innerHTML = '<p style="text-align: center; color: white;">No jobs available</p>';
+                return;
+            }
+
+            jobs.slice().reverse().forEach(job => {
+                const applied = currentUser && currentUser.appliedJobs.includes(job.id);
+                jobsList.innerHTML += `
+                    <div class="job-card">
+                        <div class="job-category">${job.category}</div>
+                        <div class="job-title">${job.title}</div>
+                        <div class="job-budget">KSh ${job.budget}</div>
+                        <p class="job-description">${job.description}</p>
+                        <button class="btn" onclick="applyJob(${job.id})" ${applied ? 'disabled' : ''} style="${applied ? 'opacity: 0.6; cursor: not-allowed;' : ''}">
+                            ${applied ? '✓ Applied - Submit Work' : 'Apply Now'}
+                        </button>
+                    </div>
+                `;
+            });
+        }
+
+        function applyJob(jobId) {
+            if (!currentUser) {
+                showAlert('Please sign in to apply', 'error');
+                openAuthModal();
+                return;
+            }
+
+            if (!currentUser.verified) {
+                showPopup(
+                    '⚠️ Activate Account Required',
+                    'You need to activate your account before applying for jobs.',
+                    'Activate Now',
+                    () => {
+                        closePopup();
+                        showPage('activate');
+                    }
+                );
+                return;
+            }
+
+            const job = jobs.find(j => j.id === jobId);
+            if (!job) return;
+
+            if (currentUser.appliedJobs.includes(jobId)) {
+                openSubmitModal(jobId);
+                return;
+            }
+
+            currentUser.appliedJobs.push(jobId);
+            if (!job.applicants) job.applicants = [];
+            if (!job.applicants.includes(currentUser.id)) {
+                job.applicants.push(currentUser.id);
+            }
+            updateUserData();
+            saveData();
+            showAlert('Applied successfully! Now submit your work.');
+            openSubmitModal(jobId);
+            loadJobs();
+        }
+
+        function openSubmitModal(jobId) {
+            const job = jobs.find(j => j.id === jobId);
+            if (!job) return;
+
+            currentSubmissionJobId = jobId;
+            document.getElementById('submissionJobTitle').value = job.title;
+            document.getElementById('submissionContent').value = '';
+            document.getElementById('submissionFile').value = '';
+            document.getElementById('submissionMessage').value = '';
+            document.getElementById('submitJobModal').classList.add('active');
+            overlay.classList.add('active');
+        }
+
+        function closeSubmitModal() {
+            document.getElementById('submitJobModal').classList.remove('active');
+            overlay.classList.remove('active');
+            currentSubmissionJobId = null;
+        }
+
+        function submitWork() {
+            if (!currentUser || !currentSubmissionJobId) return;
+
+            const content = document.getElementById('submissionContent').value;
+            const file = document.getElementById('submissionFile').files[0];
+            const message = document.getElementById('submissionMessage').value;
+
+            if (!content && !file) {
+                showAlert('Please provide your work or upload a file', 'error');
+                return;
+            }
+
+            const job = jobs.find(j => j.id === currentSubmissionJobId);
+            if (!job) return;
+
+            const submission = {
+                id: Date.now(),
+                jobId: currentSubmissionJobId,
+                jobTitle: job.title,
+                userId: currentUser.id,
+                userName: currentUser.name,
+                userEmail: currentUser.email,
+                content: content,
+                fileName: file ? file.name : '',
+                message: message,
+                jobBudget: job.budget,
+                status: 'pending',
+                date: new Date().toLocaleDateString(),
+                time: new Date().toLocaleTimeString()
+            };
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    submission.file = e.target.result;
+                    finishSubmission(submission);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                finishSubmission(submission);
+            }
+        }
+
+        function finishSubmission(submission) {
+            jobSubmissions.push(submission);
+            
+            if (!chatMessages[submission.id]) {
+                chatMessages[submission.id] = [];
+            }
+
+            if (submission.message) {
+                chatMessages[submission.id].push({
+                    from: currentUser.name,
+                    fromId: currentUser.id,
+                    message: submission.message,
+                    time: new Date().toLocaleTimeString(),
+                    date: new Date().toLocaleDateString()
+                });
+            }
+
+            if (!currentUser.pendingJobs.includes(submission.jobId)) {
+                currentUser.pendingJobs.push(submission.jobId);
+            }
+            
+            const appliedIndex = currentUser.appliedJobs.indexOf(submission.jobId);
+            if (appliedIndex > -1) {
+                currentUser.appliedJobs.splice(appliedIndex, 1);
+            }
+
+            updateUserData();
+            saveData();
+            closeSubmitModal();
+            
+            showPopup(
+                '✅ Work Submitted Successfully',
+                'Your work has been submitted and is pending review!',
+                'Okay',
+                closePopup
+            );
+            loadMyJobs();
+        }
+
+        function copyPhoneNumber(elementId) {
+            const numberElement = document.getElementById(elementId);
+            const number = numberElement.textContent;
+            
+            const tempInput = document.createElement('input');
+            tempInput.value = number;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            
+            showAlert('Phone number copied: ' + number);
+        }
+
+        function previewScreenshot(type) {
+            const input = document.getElementById(type + 'Screenshot');
+            const preview = document.getElementById(type + 'Preview');
+            
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function activateAccount() {
+            if (!currentUser) {
+                showAlert('Please sign in first', 'error');
+                return;
+            }
+
+            const screenshot = document.getElementById('activationScreenshot').files[0];
+            if (!screenshot) {
+                showAlert('Please upload payment screenshot', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const request = {
+                    id: Date.now(),
+                    userId: currentUser.id,
+                    userName: currentUser.name,
+                    userEmail: currentUser.email,
+                    screenshot: e.target.result,
+                    status: 'pending',
+                    date: new Date().toLocaleDateString(),
+                    time: new Date().toLocaleTimeString()
+                };
+
+                activationRequests.push(request);
+                saveData();
+                showPopup(
+                    '✅ Request Submitted',
+                    'Your activation request has been submitted successfully! Please wait for admin approval.',
+                    'Okay',
+                    closePopup
+                );
+                document.getElementById('activationScreenshot').value = '';
+                document.getElementById('activationPreview').style.display = 'none';
+            };
+            reader.readAsDataURL(screenshot);
+        }
+
+        function loadMyJobs() {
+            if (!currentUser) return;
+
+            const appliedJobs = jobs.filter(j => currentUser.appliedJobs.includes(j.id));
+            const completedJobs = jobs.filter(j => currentUser.completedJobs.includes(j.id));
+            const pendingJobs = jobs.filter(j => currentUser.pendingJobs.includes(j.id));
+            const rejectedJobs = jobs.filter(j => currentUser.rejectedJobs.includes(j.id));
+
+            document.getElementById('appliedJobs').innerHTML = appliedJobs.length ? 
+                appliedJobs.map(j => `
+                    <div class="job-card">
+                        <div class="job-title">${j.title}</div>
+                        <div class="job-budget">KSh ${j.budget}</div>
+                        <p>${j.description}</p>
+                        <button class="btn" onclick="openSubmitModal(${j.id})">Submit Work</button>
+                    </div>
+                `).join('') :
+                '<p>No applied jobs</p>';
+
+            document.getElementById('completedJobs').innerHTML = completedJobs.length ?
+                completedJobs.map(j => `
+                    <div class="job-card">
+                        <div class="job-title">${j.title}</div>
+                        <div class="job-budget">KSh ${j.budget}</div>
+                        <p>${j.description}</p>
+                        <span class="status-badge status-approved">✅ Approved & Paid</span>
+                    </div>
+                `).join('') :
+                '<p>No completed jobs yet</p>';
+
+            document.getElementById('pendingJobs').innerHTML = pendingJobs.length ?
+                pendingJobs.map(j => {
+                    const submission = jobSubmissions.find(s => s.jobId === j.id && s.userId === currentUser.id);
+                    return `
+                        <div class="job-card">
+                            <div class="job-title">${j.title}</div>
+                            <div class="job-budget">KSh ${j.budget}</div>
+                            <p>${j.description}</p>
+                            <span class="status-badge status-pending">⏳ Pending Review</span>
+                            ${submission ? `<button class="btn btn-secondary" onclick="openChatModal(${submission.id})" style="margin-top: 1rem;">💬 Chat</button>` : ''}
+                        </div>
+                    `;
+                }).join('') :
+                '<p>No pending jobs</p>';
+
+            document.getElementById('rejectedJobs').innerHTML = rejectedJobs.length ?
+                rejectedJobs.map(j => `
+                    <div class="job-card">
+                        <div class="job-title">${j.title}</div>
+                        <div class="job-budget">KSh ${j.budget}</div>
+                        <p>${j.description}</p>
+                        <span class="status-badge status-rejected">❌ Rejected</span>
+                    </div>
+                `).join('') :
+                '<p>No rejected jobs</p>';
+        }
+
+        function showJobTab(tab) {
+            document.querySelectorAll('#myjobs .admin-tabs .tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.getElementById('appliedJobs').style.display = 'none';
+            document.getElementById('completedJobs').style.display = 'none';
+            document.getElementById('pendingJobs').style.display = 'none';
+            document.getElementById('rejectedJobs').style.display = 'none';
+            
+            document.getElementById(tab + 'Jobs').style.display = 'block';
+        }
+
+        function openChatModal(submissionId) {
+            const submission = jobSubmissions.find(s => s.id === submissionId);
+            if (!submission) return;
+
+            currentChatSubmissionId = submissionId;
+            
+            const isAdmin = currentUser.email === 'michaeljohn254h@gmail.com';
+            const otherParty = isAdmin ? submission.userName : 'Admin';
+            
+            document.getElementById('chatHeader').innerHTML = `
+                <h3 style="color: var(--primary); margin-bottom: 0.5rem;">Job: ${submission.jobTitle}</h3>
+                <p>Chatting with: <strong>${otherParty}</strong></p>
+            `;
+
+            loadChatMessages();
+            document.getElementById('chatModal').classList.add('active');
+            overlay.classList.add('active');
+        }
+
+        function closeChatModal() {
+            document.getElementById('chatModal').classList.remove('active');
+            overlay.classList.remove('active');
+            currentChatSubmissionId = null;
+        }
+
+        function loadChatMessages() {
+            if (!currentChatSubmissionId) return;
+
+            const messages = chatMessages[currentChatSubmissionId] || [];
+            const chatContainer = document.getElementById('chatMessages');
+            
+            if (messages.length === 0) {
+                chatContainer.innerHTML = '<p style="text-align: center; color: #7f8c8d;">No messages yet. Start the conversation!</p>';
+                return;
+            }
+
+            chatContainer.innerHTML = messages.map(msg => {
+                const isMe = msg.fromId === currentUser.id;
+                return `
+                    <div style="margin-bottom: 1rem; text-align: ${isMe ? 'right' : 'left'};">
+                        <div style="display: inline-block; max-width: 70%; background: ${isMe ? 'var(--gradient)' : '#e0e0e0'}; color: ${isMe ? 'white' : 'var(--dark)'}; padding: 1rem; border-radius: 15px; text-align: left;">
+                            <strong style="font-size: 0.9rem;">${msg.from}</strong><br>
+                            <p style="margin: 0.5rem 0;">${msg.message}</p>
+                            <span style="font-size: 0.75rem; opacity: 0.8;">${msg.time}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function sendMessage() {
+            if (!currentChatSubmissionId || !currentUser) return;
+
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+
+            if (!message) {
+                showAlert('Please enter a message', 'error');
+                return;
+            }
+
+            if (!chatMessages[currentChatSubmissionId]) {
+                chatMessages[currentChatSubmissionId] = [];
+            }
+
+            chatMessages[currentChatSubmissionId].push({
+                from: currentUser.name,
+                fromId: currentUser.id,
+                message: message,
+                time: new Date().toLocaleTimeString(),
+                date: new Date().toLocaleDateString()
+            });
+
+            saveData();
+            input.value = '';
+            loadChatMessages();
+        }
+
+        function showAdminTab(tab) {
+            document.querySelectorAll('#admin .admin-tabs .tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.getElementById('adminUsers').style.display = 'none';
+            document.getElementById('adminActivations').style.display = 'none';
+            document.getElementById('adminSubmissions').style.display = 'none';
+            document.getElementById('adminWithdrawals').style.display = 'none';
+            document.getElementById('adminMessages').style.display = 'none';
+            
+            const tabName = tab.charAt(0).toUpperCase() + tab.slice(1);
+            document.getElementById('admin' + tabName).style.display = 'block';
+        }
+
+        function loadAdminData() {
+            if (!currentUser || currentUser.email !== 'michaeljohn254h@gmail.com') return;
+
+            // Load Users
+            document.getElementById('usersList').innerHTML = users.filter(u => u.email !== 'michaeljohn254h@gmail.com').map(u => `
+                <div class="user-card">
+                    <strong style="font-size: 1.1rem;">${u.name}</strong><br>
+                    <p style="margin: 0.5rem 0;">Email: ${u.email}</p>
+                    <p style="margin: 0.5rem 0;">Balance: <strong>KSh ${u.balance}</strong></p>
+                    <p style="margin: 0.5rem 0;">
+                        ${u.verified ? '<span class="status-badge status-approved">✓ Verified</span>' : '<span class="status-badge status-pending">Not Verified</span>'}
+                    </p>
+                    <p style="margin: 0.5rem 0;">Joined: ${u.joinDate || new Date(u.id).toLocaleDateString()}</p>
+                </div>
+            `).join('') || '<p>No users registered yet</p>';
+
+            // Load Activation Requests
+            document.getElementById('activationsList').innerHTML = activationRequests.filter(r => r.status === 'pending').map(r => `
+                <div class="user-card">
+                    <h3 style="color: var(--primary);">${r.userName}</h3>
+                    <p><strong>Email:</strong> ${r.userEmail}</p>
+                    <p><strong>Date:</strong> ${r.date} at ${r.time}</p>
+                    <span class="status-badge status-pending">Pending Approval</span><br><br>
+                    <img src="${r.screenshot}" class="screenshot-preview"><br><br>
+                    <button class="btn" onclick="approveActivation(${r.id})" style="margin-right: 1rem;">✅ Approve</button>
+                    <button class="btn btn-secondary" onclick="rejectActivation(${r.id})">❌ Reject</button>
+                </div>
+            `).join('') || '<p>No pending activation requests</p>';
+
+            // Load Job Submissions
+            document.getElementById('submissionsList').innerHTML = jobSubmissions.filter(s => s.status === 'pending').map(s => `
+                <div class="user-card">
+                    <h3 style="color: var(--primary);">${s.jobTitle}</h3>
+                    <p><strong>Submitted by:</strong> ${s.userName} (${s.userEmail})</p>
+                    <p><strong>Budget:</strong> KSh ${s.jobBudget}</p>
+                    <p><strong>Date:</strong> ${s.date} at ${s.time}</p>
+                    <span class="status-badge status-pending">Pending Review</span><br><br>
+                    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 15px; margin: 1rem 0;">
+                        <strong>Submitted Work:</strong><br>
+                        <p style="white-space: pre-wrap; margin-top: 0.5rem;">${s.content || 'File only submission'}</p>
+                        ${s.fileName ? `<p style="margin-top: 0.5rem;"><strong>File:</strong> ${s.fileName}</p>` : ''}
+                    </div>
+                    <button class="btn" onclick="openChatModal(${s.id})" style="margin-right: 1rem;">💬 Chat with Worker</button>
+                    <button class="btn" onclick="approveSubmission(${s.id})" style="margin-right: 1rem;">✅ Approve & Pay</button>
+                    <button class="btn btn-secondary" onclick="rejectSubmission(${s.id})">❌ Reject</button>
+                </div>
+            `).join('') || '<p>No pending submissions</p>';
+
+            // Load Withdrawal Requests
+            document.getElementById('withdrawalsList').innerHTML = withdrawalRequests.filter(w => w.status === 'pending').map(w => `
+                <div class="user-card">
+                    <h3 style="color: var(--primary);">${w.userName}</h3>
+                    <p><strong>Email:</strong> ${w.userEmail}</p>
+                    <p><strong>Amount:</strong> <span style="color: var(--success); font-size: 1.3rem; font-weight: bold;">KSh ${w.amount}</span></p>
+                    <p><strong>Requested:</strong> ${w.date} at ${w.time}</p>
+                    <span class="status-badge status-pending">Pending</span><br><br>
+                    <button class="btn" onclick="approveWithdrawal(${w.id})" style="margin-right: 1rem;">✅ Approve & Process</button>
+                    <button class="btn btn-secondary" onclick="rejectWithdrawal(${w.id})">❌ Reject</button>
+                </div>
+            `).join('') || '<p>No pending withdrawal requests</p>';
+
+            // Load All Messages
+            let messagesHTML = '';
+            for (let submissionId in chatMessages) {
+                const submission = jobSubmissions.find(s => s.id == submissionId);
+                if (submission && chatMessages[submissionId].length > 0) {
+                    messagesHTML += `
+                        <div class="user-card">
+                            <h3 style="color: var(--primary);">Job: ${submission.jobTitle}</h3>
+                            <p><strong>Worker:</strong> ${submission.userName}</p>
+                            <p><strong>Messages:</strong> ${chatMessages[submissionId].length}</p>
+                            <button class="btn" onclick="openChatModal(${submissionId})">💬 View Conversation</button>
+                        </div>
+                    `;
+                }
+            }
+            document.getElementById('messagesList').innerHTML = messagesHTML || '<p>No messages yet</p>';
+        }
+
+        function approveActivation(requestId) {
+            const request = activationRequests.find(r => r.id === requestId);
+            if (!request) return;
+
+            const user = users.find(u => u.id === request.userId);
+            if (user) {
+                user.verified = true;
+                updateUserInDB(user);
+            }
+
+            request.status = 'approved';
+            saveData();
+            showAlert('Activation approved! User has been verified.');
+            loadAdminData();
+        }
+
+        function rejectActivation(requestId) {
+            const request = activationRequests.find(r => r.id === requestId);
+            if (request) {
+                request.status = 'rejected';
+                saveData();
+                showAlert('Activation rejected');
+                loadAdminData();
+            }
+        }
+
+        function approveSubmission(submissionId) {
+            const submission = jobSubmissions.find(s => s.id === submissionId);
+            if (!submission) return;
+
+            const user = users.find(u => u.id === submission.userId);
+            if (user) {
+                user.balance += parseInt(submission.jobBudget);
+                
+                const pendingIndex = user.pendingJobs.indexOf(submission.jobId);
+                if (pendingIndex > -1) {
+                    user.pendingJobs.splice(pendingIndex, 1);
+                }
+                if (!user.completedJobs.includes(submission.jobId)) {
+                    user.completedJobs.push(submission.jobId);
+                }
+                
+                updateUserInDB(user);
+            }
+
+            submission.status = 'approved';
+            saveData();
+            showAlert(`Work approved! KSh ${submission.jobBudget} added to ${submission.userName}'s wallet.`);
+            loadAdminData();
+        }
+
+        function rejectSubmission(submissionId) {
+            const submission = jobSubmissions.find(s => s.id === submissionId);
+            if (!submission) return;
+
+            const user = users.find(u => u.id === submission.userId);
+            if (user) {
+                const pendingIndex = user.pendingJobs.indexOf(submission.jobId);
+                if (pendingIndex > -1) {
+                    user.pendingJobs.splice(pendingIndex, 1);
+                }
+                if (!user.rejectedJobs.includes(submission.jobId)) {
+                    user.rejectedJobs.push(submission.jobId);
+                }
+                
+                updateUserInDB(user);
+            }
+
+            submission.status = 'rejected';
+            saveData();
+            showAlert('Submission rejected');
+            loadAdminData();
+        }
+
+        function approveWithdrawal(withdrawalId) {
+            const withdrawal = withdrawalRequests.find(w => w.id === withdrawalId);
+            if (!withdrawal) return;
+
+            const user = users.find(u => u.id === withdrawal.userId);
+            if (user) {
+                user.balance -= withdrawal.amount;
+                updateUserInDB(user);
+            }
+
+            withdrawal.status = 'approved';
+            saveData();
+            showAlert(`Withdrawal approved! KSh ${withdrawal.amount} sent to ${withdrawal.userName}.`);
+            loadAdminData();
+        }
+
+        function rejectWithdrawal(withdrawalId) {
+            const withdrawal = withdrawalRequests.find(w => w.id === withdrawalId);
+            if (withdrawal) {
+                withdrawal.status = 'rejected';
+                saveData();
+                showAlert('Withdrawal rejected');
+                loadAdminData();
+            }
+        }
+
+        function updateUserData() {
+            const index = users.findIndex(u => u.id === currentUser.id);
+            if (index !== -1) {
+                users[index] = currentUser;
+                saveData();
+            }
+        }
+
+        function updateUserInDB(user) {
+            const index = users.findIndex(u => u.id === user.id);
+            if (index !== -1) {
+                users[index] = user;
+                
+                if (currentUser && currentUser.id === user.id) {
+                    currentUser = user;
+                    updateProfile();
+                }
+                saveData();
+            }
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                currentUser = null;
+                localStorage.setItem('currentUser', JSON.stringify(null));
+                location.reload();
+            }
+        }
+
+        function saveData() {
+            const data = {
+                users,
+                jobs,
+                currentUser,
+                activationRequests,
+                jobSubmissions,
+                withdrawalRequests,
+                userMessages,
+                chatMessages
+            };
+            
+            try {
+                for (let key in data) {
+                    localStorage.setItem(key, JSON.stringify(data[key]));
+                }
+            } catch (e) {
+                console.log('Storage limit reached');
+            }
+        }
+
+        function loadData() {
+            try {
+                users = JSON.parse(localStorage.getItem('users')) || [];
+                jobs = JSON.parse(localStorage.getItem('jobs')) || [];
+                currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                activationRequests = JSON.parse(localStorage.getItem('activationRequests')) || [];
+                jobSubmissions = JSON.parse(localStorage.getItem('jobSubmissions')) || [];
+                withdrawalRequests = JSON.parse(localStorage.getItem('withdrawalRequests')) || [];
+                userMessages = JSON.parse(localStorage.getItem('userMessages')) || [];
+                chatMessages = JSON.parse(localStorage.getItem('chatMessages')) || {};
+            } catch (e) {
+                console.log('Error loading data');
+            }
+        }
+
+        function initializeJobs() {
+            if (jobs.length > 0) return;
+
+            jobs = [
+                {id: Date.now() + 1, category: "Writing", title: "SEO Blog Article - Digital Marketing", description: "Write a 1500-word SEO-optimized blog article about digital marketing trends in Kenya. Must include keywords and meta descriptions.", budget: 2000, applicants: []},
+                {id: Date.now() + 2, category: "Writing", title: "Product Descriptions for E-commerce", description: "Create compelling product descriptions for 15 e-commerce items. Each 100-150 words, engaging and persuasive.", budget: 1800, applicants: []},
+                {id: Date.now() + 3, category: "Writing", title: "Social Media Content Package", description: "Write 25 engaging social media posts for Facebook and Instagram. Topics: health, fitness, lifestyle. Include hashtags.", budget: 2200, applicants: []},
+                {id: Date.now() + 4, category: "Writing", title: "Academic Research Paper", description: "Write a 3000-word research paper on climate change effects in East Africa. Include citations in APA format.", budget: 3500, applicants: []},
+                {id: Date.now() + 5, category: "Writing", title: "Website Content Creation", description: "Create content for 5 website pages: Home, About, Services, Blog, Contact. Professional tone required.", budget: 2800, applicants: []},
+                {id: Date.now() + 6, category: "Writing", title: "Email Newsletter Series", description: "Write 4 weekly email newsletters for a tech startup. 300-400 words each with subject lines and CTAs.", budget: 2000, applicants: []},
+                {id: Date.now() + 7, category: "Writing", title: "Technical Documentation", description: "Create user manual and technical documentation for a mobile app. Include screenshots and step-by-step guides.", budget: 3200, applicants: []},
+                {id: Date.now() + 8, category: "Writing", title: "Children's Story Collection", description: "Write 5 short creative stories (500 words each) for children aged 8-12. Educational and entertaining.", budget: 2500, applicants: []},
+                {id: Date.now() + 9, category: "Writing", title: "Press Release Writing", description: "Write a professional press release (500-600 words) announcing a new product launch. Standard PR format.", budget: 1500, applicants: []},
+                {id: Date.now() + 10, category: "Writing", title: "Comprehensive Business Plan", description: "Write a business plan for a startup (20+ pages). Include executive summary, market analysis, projections.", budget: 5000, applicants: []},
+                {id: Date.now() + 11, category: "Design", title: "Modern Logo Design", description: "Create a professional, modern logo for a tech startup. Multiple concepts, revisions included. Vector files.", budget: 3000, applicants: []},
+                {id: Date.now() + 12, category: "Design", title: "Social Media Graphics Package", description: "Design 20 social media graphics for Instagram and Facebook. Brand consistent, engaging visuals.", budget: 2500, applicants: []},
+                {id: Date.now() + 13, category: "Design", title: "Business Card Design", description: "Design professional business cards for a company. Both sides, print-ready files. Modern and clean.", budget: 1200, applicants: []},
+                {id: Date.now() + 14, category: "Design", title: "Event Poster Design", description: "Create eye-catching poster for a music event. A3 size, vibrant colors, print and digital versions.", budget: 1800, applicants: []},
+                {id: Date.now() + 15, category: "Design", title: "Product Packaging Design", description: "Design packaging for a new food product. 3D mockups, all sides designed, print-ready files.", budget: 4000, applicants: []},
+                {id: Date.now() + 16, category: "Design", title: "Flyer Design for Restaurant", description: "Design promotional flyer for a restaurant. Menu highlights, A5 size, print and digital versions.", budget: 1500, applicants: []},
+                {id: Date.now() + 17, category: "Design", title: "Brand Identity Package", description: "Complete brand identity: logo, color palette, typography, brand guidelines. Professional package.", budget: 6000, applicants: []},
+                {id: Date.now() + 18, category: "Design", title: "Instagram Story Templates", description: "Create 15 Instagram Story templates. Editable, brand-focused, modern aesthetic.", budget: 2000, applicants: []},
+                {id: Date.now() + 19, category: "Design", title: "Infographic Design", description: "Design informative infographic on health statistics. Clear data visualization, engaging layout.", budget: 2200, applicants: []},
+                {id: Date.now() + 20, category: "Design", title: "Book Cover Design", description: "Design captivating book cover for fiction novel. Front, back, spine. Print and e-book versions.", budget: 2800, applicants: []},
+                {id: Date.now() + 21, category: "Writing", title: "Travel Blog Series", description: "Write 3 travel blog posts about top Kenya destinations. 1000 words each, engaging storytelling.", budget: 2400, applicants: []},
+                {id: Date.now() + 22, category: "Writing", title: "Recipe and Food Blog", description: "Create 10 unique Kenyan recipe blog posts. Ingredients, instructions, beautiful descriptions.", budget: 1800, applicants: []},
+                {id: Date.now() + 23, category: "Writing", title: "LinkedIn Profile Optimization", description: "Rewrite and optimize LinkedIn profiles for 5 professionals. Compelling headlines and summaries.", budget: 1500, applicants: []},
+                {id: Date.now() + 24, category: "Writing", title: "Video Script Package", description: "Write 5 YouTube video scripts (3-5 min each) on personal finance tips. Conversational and engaging.", budget: 2100, applicants: []},
+                {id: Date.now() + 25, category: "Writing", title: "Technical Whitepaper", description: "Create technical whitepaper (4000+ words) on blockchain technology in Africa. Professional research.", budget: 4500, applicants: []},
+                {id: Date.now() + 26, category: "Design", title: "Menu Design for Cafe", description: "Design elegant menu for upscale cafe. Food photography layout, A4 size, print-ready.", budget: 2000, applicants: []},
+                {id: Date.now() + 27, category: "Design", title: "T-Shirt Graphics Design", description: "Create 5 unique t-shirt graphics. Trendy, print-ready, vector files provided.", budget: 2500, applicants: []},
+                {id: Date.now() + 28, category: "Design", title: "Real Estate Brochure", description: "Design professional brochure for real estate project. Multiple pages, high-quality layout.", budget: 3000, applicants: []},
+                {id: Date.now() + 29, category: "Design", title: "Certificate Design Template", description: "Create elegant certificate template for training institute. Editable, professional design.", budget: 1500, applicants: []},
+                {id: Date.now() + 30, category: "Design", title: "PowerPoint Presentation", description: "Design 20-slide PowerPoint presentation for business pitch. Professional, modern, template included.", budget: 2800, applicants: []},
+                {id: Date.now() + 31, category: "Writing", title: "Grant Proposal Writing", description: "Write compelling grant proposal for NGO project. Project description, budget, expected outcomes.", budget: 3500, applicants: []},
+                {id: Date.now() + 32, category: "Writing", title: "E-book on Productivity", description: "Write 15,000-word e-book on time management. Practical tips and real-life examples.", budget: 6000, applicants: []},
+                {id: Date.now() + 33, category: "Writing", title: "Ad Campaign Copywriting", description: "Write creative copy for 10 digital ads. Google, Facebook, Instagram. Headlines and CTAs.", budget: 2500, applicants: []},
+                {id: Date.now() + 34, category: "Writing", title: "Case Study Writing", description: "Write 3 professional case studies showcasing successful projects. 800-1000 words each.", budget: 2800, applicants: []},
+                {id: Date.now() + 35, category: "Writing", title: "Real Estate Listings", description: "Write compelling descriptions for 20 property listings. Highlight features, engaging language.", budget: 2000, applicants: []},
+                {id: Date.now() + 36, category: "Design", title: "Wedding Invitation Design", description: "Design elegant wedding invitation suite. Save-the-date, invitation, RSVP card. Print files.", budget: 2500, applicants: []},
+                {id: Date.now() + 37, category: "Design", title: "YouTube Thumbnail Pack", description: "Create 10 YouTube thumbnail designs. Click-worthy, branded, consistent style.", budget: 1800, applicants: []},
+                {id: Date.now() + 38, category: "Design", title: "Magazine Layout Design", description: "Design 8-page magazine layout. Modern, clean, professional typography and images.", budget: 3500, applicants: []},
+                {id: Date.now() + 39, category: "Design", title: "App Icon Design", description: "Design professional mobile app icon. iOS and Android versions, all sizes included.", budget: 1500, applicants: []},
+                {id: Date.now() + 40, category: "Design", title: "Billboard Design", description: "Create large-format billboard design for advertising campaign. Bold, clear messaging.", budget: 4000, applicants: []},
+                {id: Date.now() + 41, category: "Writing", title: "Motivational Speech Writing", description: "Write 10-minute motivational speech on entrepreneurship. Inspire and engage audience.", budget: 2000, applicants: []},
+                {id: Date.now() + 42, category: "Writing", title: "Podcast Script Series", description: "Write scripts for 5 podcast episodes on business topics. 15 minutes each, conversational.", budget: 2500, applicants: []},
+                {id: Date.now() + 43, category: "Writing", title: "Health and Wellness Articles", description: "Write 8 health articles (800 words each). Evidence-based, easy to understand, engaging.", budget: 2400, applicants: []},
+                {id: Date.now() + 44, category: "Writing", title: "Company Newsletter Content", description: "Write monthly newsletter content for 6 months. Employee highlights, news, updates.", budget: 3000, applicants: []},
+                {id: Date.now() + 45, category: "Writing", title: "Landing Page Copy", description: "Write high-converting copy for 3 landing pages. Clear value proposition, strong CTAs.", budget: 2200, applicants: []},
+                {id: Date.now() + 46, category: "Design", title: "Email Newsletter Template", description: "Design responsive email newsletter template. Mobile-friendly, branded, HTML files.", budget: 2000, applicants: []},
+                {id: Date.now() + 47, category: "Design", title: "Church Bulletin Design", description: "Design weekly church bulletin template. Clean, informative, editable design.", budget: 1200, applicants: []},
+                {id: Date.now() + 48, category: "Design", title: "Album Cover Design", description: "Create stunning album cover for music artist. Digital and physical formats.", budget: 2500, applicants: []},
+                {id: Date.now() + 49, category: "Design", title: "Vehicle Wrap Design", description: "Design full vehicle wrap for company van. Bold branding, contact info, 3D mockup.", budget: 4500, applicants: []},
+                {id: Date.now() + 50, category: "Design", title: "Exhibition Banner Design", description: "Create professional exhibition banner. Roll-up design, company branding, clear messaging.", budget: 1800, applicants: []}
+            ];
+
+            saveData();
+        }
+
+        window.onload = function() {
+            loadData();
+            
+            if (!users.find(u => u.email === 'michaeljohn254h@gmail.com')) {
+                users.push({
+                    id: 1,
+                    name: 'Admin',
+                    email: 'michaeljohn254h@gmail.com',
+                    password: 'mike254h',
+                    balance: 0,
+                    verified: true,
+                    photo: '',
+                    appliedJobs: [],
+                    completedJobs: [],
+                    pendingJobs: [],
+                    rejectedJobs: [],
+                    joinDate: new Date().toLocaleDateString()
+                });
+                saveData();
+            }
+
+            initializeJobs();
+
+            if (currentUser) {
+                updateProfile();
+            }
+            
+            loadJobs();
+        };
+
+        document.getElementById('authModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('active');
+                overlay.classList.remove('active');
+            }
+        });
+
+        document.getElementById('submitJobModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeSubmitModal();
+            }
+        });
+
+        document.getElementById('chatModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeChatModal();
+            }
+        });
+
+        document.getElementById('chatInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
